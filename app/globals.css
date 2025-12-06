@@ -9,18 +9,14 @@
 
   /* IEEE Marka Renkleri - Primary (Mavi) */
   --primary: 221 83% 53%;
-  /* Daha canlı bir mavi */
   --primary-foreground: 210 40% 98%;
   --primary-light: 217 91% 60%;
   --primary-dark: 224 76% 48%;
 
   /* Vurgu Renkleri (Görseldeki Yeşil ve Sarı) */
   --accent-green: 142 71% 45%;
-  /* Canlı yeşil */
   --accent-yellow: 48 96% 53%;
-  /* Canlı sarı */
   --accent-blue: 199 89% 48%;
-  /* Mavi vurgu */
 
   /* İkincil Renkler */
   --secondary: 210 40% 96.1%;
@@ -59,7 +55,6 @@
   --radius-sm: 0.3rem;
   --radius-lg: 0.8rem;
   --radius-full: 9999px;
-  /* Pill shape */
 
   /* Spacing */
   --spacing-card-padding: 1.5rem;
@@ -72,6 +67,7 @@
   /* Özel Tasarım Token'ları */
   --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%), hsl(217 91% 60%));
   --gradient-hero: linear-gradient(180deg, hsl(210 20% 98%), hsl(220 30% 90%));
+  --gradient-green: linear-gradient(135deg, hsl(142 71% 45%), hsl(199 89% 48%));
 
   /* Glass Effect Variables */
   --glass-bg: rgba(255, 255, 255, 0.2);
@@ -82,7 +78,8 @@
   --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
   --shadow-card: 0 4px 12px hsl(220 10% 10% / 0.05);
   --shadow-card-hover: 0 12px 32px hsl(221 83% 53% / 0.15);
-  --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -2px hsl(0 0% 0% / 0.05);
+  --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0 4px 6px -2px hsl(0 0% 0% / 0.05);
 
   /* Transition'lar */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -187,7 +184,8 @@
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Arial, Helvetica, sans-serif;
   line-height: 1.6;
 }
 
@@ -238,7 +236,7 @@ body {
     border-color: hsl(var(--primary));
   }
 
-  /* ABOUT PAGE SPECIFIC HELPERS */
+  /* ABOUT PAGE BASE */
   .section-eyebrow {
     font-size: 0.75rem;
     font-weight: 600;
@@ -253,8 +251,10 @@ body {
     padding-top: 4rem;
     padding-bottom: 4rem;
     background:
-      radial-gradient(circle at top left, hsl(var(--primary) / 0.08), transparent 60%),
-      radial-gradient(circle at bottom right, hsl(var(--accent) / 0.08), transparent 60%),
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.08),
+        transparent 60%),
+      radial-gradient(circle at bottom right, hsl(var(--accent) / 0.08),
+        transparent 60%),
       hsl(var(--background));
   }
 
@@ -272,7 +272,9 @@ body {
     padding: 0.5rem 1.1rem;
     border-radius: 999px;
     border: 1px solid hsl(var(--border));
-    background: color-mix(in srgb, hsl(var(--background)) 70%, hsl(var(--secondary)) 30%);
+    background: color-mix(in srgb,
+        hsl(var(--background)) 70%,
+        hsl(var(--secondary)) 30%);
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.16em;
@@ -293,7 +295,8 @@ body {
     border-radius: 1.5rem;
     border: 1px solid hsl(var(--border));
     background:
-      radial-gradient(circle at top left, hsl(var(--primary) / 0.06), transparent 60%),
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.06),
+        transparent 60%),
       hsl(var(--card));
     box-shadow: var(--shadow-card);
   }
@@ -306,11 +309,165 @@ body {
     background-color: hsl(var(--primary));
   }
 
+  /* ABOUT – giriş animasyonları */
+  @keyframes about-fade-up {
+    0% {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      filter: blur(4px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-animate-up {
+      opacity: 0;
+      animation-name: about-fade-up;
+      animation-duration: 0.8s;
+      animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1);
+      animation-fill-mode: forwards;
+    }
+
+    .about-delay-0 {
+      animation-delay: 0s;
+    }
+
+    .about-delay-1 {
+      animation-delay: 0.12s;
+    }
+
+    .about-delay-2 {
+      animation-delay: 0.22s;
+    }
+
+    .about-delay-3 {
+      animation-delay: 0.32s;
+    }
+
+    .about-delay-4 {
+      animation-delay: 0.42s;
+    }
+
+    .about-delay-5 {
+      animation-delay: 0.52s;
+    }
+  }
+
+  /* ABOUT – Misyon & Vizyon kartları */
+  .about-mission-card,
+  .about-vision-card {
+    position: relative;
+    border-radius: 1.5rem;
+    border: 1px solid hsl(var(--border));
+    padding: 1.75rem 1.75rem 1.9rem;
+    background:
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.1),
+        transparent 60%),
+      hsl(var(--card));
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  .about-vision-card {
+    background:
+      radial-gradient(circle at top left, hsl(var(--accent-blue) / 0.16),
+        transparent 60%),
+      hsl(var(--card));
+  }
+
+  .about-mission-card::before,
+  .about-vision-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: radial-gradient(circle at top right,
+        hsl(var(--primary) / 0.18),
+        transparent 70%);
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .about-vision-card::before {
+    background: radial-gradient(circle at top right,
+        hsl(var(--accent-blue) / 0.24),
+        transparent 70%);
+  }
+
+  .about-mission-card:hover::before,
+  .about-vision-card:hover::before {
+    opacity: 1;
+  }
+
+  .about-mission-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background-color: hsl(var(--background));
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .about-mission-pill-alt {
+    background-color: hsl(var(--accent-blue));
+    color: hsl(var(--primary-foreground));
+    border-color: transparent;
+  }
+
+  .about-mission-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .about-mission-list li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+
+  .about-mission-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background-color: hsl(var(--primary));
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.18);
+    transform: translateY(-50%);
+  }
+
+  @media (max-width: 768px) {
+
+    .about-mission-card,
+    .about-vision-card {
+      padding: 1.35rem 1.35rem 1.6rem;
+    }
+  }
+
+  /* ABOUT – Rakamlarla IEEE kartları */
   .about-stat-card {
     border-radius: 1.5rem;
     border: 1px solid hsl(var(--border));
     background:
-      radial-gradient(circle at top left, hsl(var(--primary) / 0.10), transparent 65%),
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.1),
+        transparent 65%),
       hsl(var(--card));
     box-shadow: var(--shadow-card);
   }
@@ -328,7 +485,7 @@ body {
     text-transform: uppercase;
   }
 
-  .about-stat-tag {
+  .about-stat-icon-circle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -337,9 +494,257 @@ body {
     border-radius: 999px;
     border: 1px solid hsl(var(--border));
     background-color: hsl(var(--background));
-    font-size: 0.7rem;
+  }
+
+  .about-stat-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    stroke: hsl(var(--primary));
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .about-stat-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    border: 1px dashed hsl(var(--border));
+    background-color: hsl(var(--background));
+  }
+
+  .about-stat-tag-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: radial-gradient(circle at center,
+        hsl(var(--accent-blue)),
+        hsl(var(--primary)));
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.18);
+  }
+
+  /* ABOUT – Değerlerimiz kartları */
+  .about-values-card {
+    position: relative;
+    border-radius: 1.5rem;
+    border: 1px solid hsl(var(--border));
+    padding: 1.6rem 1.6rem 1.8rem;
+    background:
+      radial-gradient(circle at top, hsl(var(--accent) / 0.12),
+        transparent 55%),
+      hsl(var(--card));
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  .about-values-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: radial-gradient(circle at bottom right,
+        hsl(var(--primary) / 0.16),
+        transparent 70%);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .about-values-card:hover::before {
+    opacity: 1;
+  }
+
+  .about-values-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
     font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.1rem;
+    background-color: hsl(var(--background));
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .about-values-icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 999px;
+    background: radial-gradient(circle at center,
+        hsl(var(--accent-green) / 0.25),
+        hsl(var(--primary) / 0.05));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .about-values-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    stroke: hsl(var(--primary));
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  /* ABOUT – sayfa altı info bloğu (ieeeiborep footer benzeri) */
+  .about-footer-info {
+    margin-top: 1.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid hsl(var(--border));
+    background:
+      radial-gradient(circle at top, hsl(var(--primary) / 0.06),
+        transparent 60%),
+      hsl(var(--card));
+    box-shadow: var(--shadow-card);
+    padding: 2rem 1.5rem 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .about-footer-info {
+      padding: 2.25rem 2rem 1.75rem;
+    }
+  }
+
+  .about-footer-info-inner {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  @media (min-width: 900px) {
+    .about-footer-info-inner {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+
+  .about-footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .about-footer-logo-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .about-footer-logo-circle {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top,
+        hsl(var(--accent-blue)),
+        hsl(var(--primary)));
+    color: hsl(var(--primary-foreground));
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .about-footer-logo-text {
+    transform: translateY(0.5px);
+  }
+
+  .about-footer-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+  }
+
+  .about-footer-subtitle {
+    font-size: 0.85rem;
     color: hsl(var(--muted-foreground));
+  }
+
+  .about-footer-description {
+    font-size: 0.9rem;
+    color: hsl(var(--muted-foreground));
+    max-width: 24rem;
+  }
+
+  .about-footer-col-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .about-footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .about-footer-link {
+    font-size: 0.9rem;
+    color: hsl(var(--foreground));
+    text-decoration: none;
+    transition: color 0.18s ease;
+  }
+
+  .about-footer-link:hover {
+    color: hsl(var(--primary));
+  }
+
+  .about-footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .about-footer-contact-item {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .about-footer-contact-icon {
+    margin-top: 0.1rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--background));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-footer-contact-icon-svg {
+    width: 1rem;
+    height: 1rem;
+    stroke: hsl(var(--accent-blue));
+    fill: none;
+    stroke-width: 1.6;
+  }
+
+  .about-footer-divider {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        hsl(var(--border)),
+        transparent);
+  }
+
+  .about-footer-bottom {
+    font-size: 0.8rem;
+    color: hsl(var(--muted-foreground));
+    text-align: center;
   }
 
   /* Container - Merkezlenmiş, maksimum genişlik */

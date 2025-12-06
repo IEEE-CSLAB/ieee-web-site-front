@@ -33,7 +33,7 @@ const RecruitmentCard = () => {
           <div className="space-y-1 text-xs text-muted-foreground">
             <p>• Online başvuru formu</p>
             <p>• Mülakat &amp; tanışma oturumu</p>
-            <p>• Komiteye özel orientasyon süreci</p>
+            <p>• Komiteye özel oryantasyon süreci</p>
           </div>
 
           <a href="#" className="btn btn-primary text-xs px-4 py-2">
