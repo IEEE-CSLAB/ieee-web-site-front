@@ -6,11 +6,12 @@ interface EventCardProps {
     tag: string;
     image: string;
     className?: string;
+    link?: string;
 }
 
-const EventCard = ({ title, description, tag, image, className = '' }: EventCardProps) => {
+const EventCard = ({ title, description, tag, image, className = '', link = '/events' }: EventCardProps) => {
     return (
-        <div className={`group relative h-[400px] rounded-[2rem] overflow-hidden cursor-pointer ${className}`}>
+        <a href={link} className={`group relative h-[400px] rounded-[2rem] overflow-hidden cursor-pointer block ${className}`}>
             {/* Background Image */}
             <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
@@ -47,7 +48,7 @@ const EventCard = ({ title, description, tag, image, className = '' }: EventCard
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     );
 };
 

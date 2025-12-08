@@ -27,13 +27,13 @@ const JoinCard = () => {
                 IEEE Antalya ailesine katılın.
             </h3>
 
-            <button className="flex items-center gap-2 text-white border border-white/30 rounded-full px-6 py-3 hover:bg-white hover:text-black transition-all duration-300 group-hover:border-white">
+            <a href="/committees" className="flex items-center gap-2 text-white border border-white/30 rounded-full px-6 py-3 hover:bg-white hover:text-black transition-all duration-300 group-hover:border-white">
                 Bize Ulaşın
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M7 17L17 7" />
                     <path d="M7 7h10v10" />
                 </svg>
-            </button>
+            </a>
         </div>
     );
 };

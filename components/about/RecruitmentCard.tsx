@@ -3,10 +3,10 @@ import React from "react";
 const RecruitmentCard = () => {
   return (
     <div
-      className="relative h-full min-h-[220px] rounded-3xl p-6 md:p-7 overflow-hidden shadow-card"
+      className="relative h-full min-h-[220px] rounded-3xl p-6 md:p-7 overflow-hidden shadow-card border border-border"
       style={{
         background:
-          "radial-gradient(circle at top, hsl(var(--accent-blue) / 0.22), transparent 55%)," +
+          "radial-gradient(circle at top, hsl(var(--accent-blue) / 0.12), transparent 55%)," +
           "linear-gradient(135deg, hsl(var(--background)), hsl(var(--secondary)))",
       }}
     >
