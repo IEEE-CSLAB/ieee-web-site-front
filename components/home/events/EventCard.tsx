@@ -29,7 +29,7 @@ const EventCard = ({ title, description, tag, image, className = '' }: EventCard
                 </div>
 
                 <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-3xl font-bold text-white mb-2 leading-tight">
+                    <h3 className="text-3xl font-semibold text-white mb-2 leading-tight">
                         {title}
                     </h3>
                     <p className="text-white/80 text-lg line-clamp-2 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">

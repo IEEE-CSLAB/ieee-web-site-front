@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <footer className="w-full py-6 px-4 md:px-8 mt-40">
+        <footer className="w-full py-6 px-8 mt-40">
             <div className="mx-auto max-w-[1200px] bg-gray-200 rounded-[2rem] px-6 py-8 md:px-10 md:py-10">
                 <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_2fr_1fr] gap-8 lg:gap-10 mb-8">
                     {/* Brand Section */}
@@ -122,7 +122,7 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-300/50 text-gray-500 text-xs">
+                <div className="flex flex-col md:flex-row justify-between items-center pt-6 text-gray-500 text-xs">
                     <div className="flex gap-4 mb-2 md:mb-0">
                         <a href="#" className="hover:text-gray-900 transition-colors">Gizlilik Politikası</a>
                         <a href="#" className="hover:text-gray-900 transition-colors">Kullanım Şartları</a>

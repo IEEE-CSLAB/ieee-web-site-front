@@ -23,7 +23,7 @@ const JoinCard = () => {
                 </div>
             </div>
 
-            <h3 className="text-2xl font-bold text-white mb-8 max-w-[200px]">
+            <h3 className="text-2xl font-semibold text-white mb-8 max-w-[200px]">
                 IEEE Antalya ailesine katılın.
             </h3>
 

@@ -3,7 +3,7 @@ import React from 'react';
 const HeroHeading = () => {
     return (
         <div className="absolute bottom-16 left-8 z-20 max-w-2xl text-white">
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6 drop-shadow-lg">
+            <h1 className="text-5xl md:text-6xl font-semibold leading-tight mb-6 drop-shadow-lg">
                 Teknolojiyi Keşfet, Geleceği Şekillendir
             </h1>
             <p className="text-lg md:text-xl text-white/90 mb-8 max-w-lg drop-shadow-md">
