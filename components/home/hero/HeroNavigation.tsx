@@ -5,7 +5,8 @@ const HeroNavigation = () => {
         { label: 'Hakkımızda', link: '/about' },
         { label: 'İletişim', link: '/contact' },
         { label: 'Komiteler', link: '/committees' },
-        { label: 'Etkinlikler', link: '/events' }
+        { label: 'Etkinlikler', link: '/events' },
+        { label: 'Blog', link: '/blog' }
     ];
 
     return (
