@@ -14,7 +14,7 @@ const CommitteesHeader = () => {
                 </div>
             </div>
 
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight text-center flex-1">
+            <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 tracking-tight text-center flex-1">
                 Yönetim Kurulumuz ve Komitelerimiz
             </h2>
 
