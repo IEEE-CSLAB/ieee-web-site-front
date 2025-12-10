@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "title": "Teknoloji Zirvesi 2024",
+    "description": "Sektörün öncü isimleriyle buluşun, en yeni teknolojileri keşfedin ve ağınızı genişletin.",
+    "tag": "Konferans",
+    "image": "https://devfest.istanbul/uploads/logo_3e34c1353d.png",
+    "date": "15 Mart 2024",
+    "location": "Akdeniz Üniversitesi",
+    "link": "/events",
+    "isImportant": true
+  },
+  {
+    "id": 2,
+    "title": "Yapay Zeka Hackathonu",
+    "description": "48 saat sürecek kodlama maratonunda yeteneklerinizi sergileyin ve ödüller kazanın.",
+    "tag": "Yarışma",
+    "image": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "date": "22-24 Mart 2024",
+    "location": "Online",
+    "link": "/events",
+    "isImportant": false
+  },
+  {
+    "id": 3,
+    "title": "Kariyer Günleri",
+    "description": "Staj ve iş imkanları için şirketlerle birebir görüşme fırsatını kaçırmayın.",
+    "tag": "Kariyer",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "date": "5 Nisan 2024",
+    "location": "Akdeniz Üniversitesi",
+    "link": "/events",
+    "isImportant": false
+  },
+  {
+    "id": 4,
+    "title": "Robotik Eğitim Serisi",
+    "description": "Temel seviyeden ileri seviyeye robotik kodlama ve tasarım eğitimleri.",
+    "tag": "Eğitim",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "date": "10-12 Nisan 2024",
+    "location": "Akdeniz Üniversitesi",
+    "link": "/events",
+    "isImportant": false
+  },
+  {
+    "id": 5,
+    "title": "IEEE Günleri",
+    "description": "IEEE'nin tarihçesi, misyonu ve gelecek vizyonu hakkında kapsamlı bir etkinlik.",
+    "tag": "Konferans",
+    "image": "https://images.unsplash.com/photo-1558611848-73f7eb4001a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "date": "20 Nisan 2024",
+    "location": "Akdeniz Üniversitesi",
+    "link": "/events",
+    "isImportant": false
+  },
+  {
+    "id": 6,
+    "title": "Web Geliştirme Workshop",
+    "description": "Modern web teknolojileri ve framework'ler üzerine hands-on eğitim.",
+    "tag": "Eğitim",
+    "image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "date": "28 Nisan 2024",
+    "location": "Online",
+    "link": "/events",
+    "isImportant": false
+  },
+  {
+    "id": 7,
+    "title": "Startup Pitch Yarışması",
+    "description": "Girişimcilik fikirlerinizi sunun, yatırımcılarla buluşun ve ödüller kazanın.",
+    "tag": "Yarışma",
+    "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "date": "8 Mayıs 2024",
+    "location": "Akdeniz Üniversitesi",
+    "link": "/events",
+    "isImportant": false
+  },
+  {
+    "id": 8,
+    "title": "Networking Etkinliği",
+    "description": "Sektör profesyonelleri ve öğrencilerle networking fırsatı.",
+    "tag": "Kariyer",
+    "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "date": "15 Mayıs 2024",
+    "location": "Akdeniz Üniversitesi",
+    "link": "/events",
+    "isImportant": false
+  }
+]

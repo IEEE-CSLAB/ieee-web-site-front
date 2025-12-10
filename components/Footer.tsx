@@ -73,62 +73,26 @@ const Footer = () => {
                     {/* Join Us Section */}
                     <div className="flex flex-col gap-4">
                         <h3 className="text-lg font-semibold text-gray-900">Bize Katılın</h3>
-                        <form className="flex flex-col gap-3">
-                            <div className="w-full">
-                                <input
-                                    type="email"
-                                    placeholder="E-posta adresiniz..."
-                                    className="w-full px-4 py-2.5 rounded-full bg-white border border-gray-200 outline-none text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500/20 shadow-sm text-sm"
-                                />
-                            </div>
-                            <div className="w-full">
-                                <input
-                                    type="text"
-                                    placeholder="Adınız Soyadınız..."
-                                    className="w-full px-4 py-2.5 rounded-full bg-white border border-gray-200 outline-none text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500/20 shadow-sm text-sm"
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="relative">
-                                    <select
-                                        className="w-full px-4 py-2.5 rounded-full bg-white border border-gray-200 outline-none text-gray-900 appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20 shadow-sm text-sm"
-                                        defaultValue=""
-                                    >
-                                        <option value="" disabled>İlgi Alanınız</option>
-                                        <option value="cs">Yazılım & Teknoloji</option>
-                                        <option value="ras">Robotik</option>
-                                        <option value="pes">Enerji</option>
-                                        <option value="wie">Kadın Mühendisler</option>
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                        <svg width="10" height="6" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-white text-gray-900 border border-gray-900 rounded-full p-1.5 pl-5 flex items-center justify-between hover:bg-gray-900 hover:text-white group transition-all duration-300 mt-1"
-                            >
-                                <span className="font-bold text-xs tracking-wide uppercase">GÖNDER</span>
-                                <span className="w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-gray-900 transition-colors">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M5 12h14m-7-7 7 7-7 7" />
-                                    </svg>
-                                </span>
-                            </button>
-                        </form>
+                        <a
+                            href="https://sks.akdeniz.edu.tr/kayit"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full bg-white text-gray-900 border border-gray-900 rounded-full p-1.5 pl-5 flex items-center justify-between hover:bg-gray-900 hover:text-white group transition-all duration-300"
+                        >
+                            <span className="font-bold text-xs tracking-wide uppercase">KAYIT OL</span>
+                            <span className="w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-gray-900 transition-colors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M5 12h14m-7-7 7 7-7 7" />
+                                </svg>
+                            </span>
+                        </a>
                     </div>
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-center pt-6 text-gray-500 text-xs">
-                    <div className="flex gap-4 mb-2 md:mb-0">
-                        <a href="#" className="hover:text-gray-900 transition-colors">Gizlilik Politikası</a>
-                        <a href="#" className="hover:text-gray-900 transition-colors">Kullanım Şartları</a>
-                    </div>
+
                     <div>
-                        Tüm hakları saklıdır © 2024 IEEE Antalya
+                        Tüm hakları saklıdır © 2025 IEEE Antalya
                     </div>
                 </div>
             </div>

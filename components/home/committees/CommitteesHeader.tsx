@@ -19,7 +19,7 @@ const CommitteesHeader = () => {
             </h2>
 
             <div className="flex items-center gap-4">
-                <a href="#" className="flex items-center gap-2 text-lg font-medium text-gray-900 hover:text-gray-600 transition-colors border-b border-black pb-0.5">
+                <a href="/committees" className="flex items-center gap-2 text-lg font-medium text-gray-900 hover:text-gray-600 transition-colors border-b border-black pb-0.5">
                     Daha Fazla
                     <span className="bg-black text-white rounded-full p-1 w-6 h-6 flex items-center justify-center">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

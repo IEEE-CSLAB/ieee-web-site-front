@@ -1,143 +1,124 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { IconPeople, IconUsersGroup, IconCalendar, IconTrophy, IconProps } from "./Icons";
+import React, { useEffect, useState } from 'react';
 
-type StatItem = {
-  value: number;
-  label: string;
-  description: string;
-  suffix?: string;
-  Icon: React.FC<IconProps>;
-};
-
-const stats: StatItem[] = [
-  {
-    value: 7,
-    label: "Aktif Komite",
-    description: "Farklı ilgi alanlarına hitap eden öğrenci toplulukları.",
-    Icon: IconPeople,
-  },
-  {
-    value: 250,
-    label: "Aktif Üye",
-    suffix: "+",
-    description: "IEEE çatısı altında üreten, öğrenen, paylaşan gençler.",
-    Icon: IconUsersGroup,
-  },
-  {
-    value: 50,
-    label: "Yıllık Etkinlik",
-    suffix: "+",
-    description:
-      "Teknik eğitimler, sosyal etkinlikler ve proje odaklı çalışmalar.",
-    Icon: IconCalendar,
-  },
-  {
-    value: 15,
-    label: "Ödül",
-    suffix: "+",
-    description: "Ulusal ve yerel ölçekte alınan dereceler.",
-    Icon: IconTrophy,
-  },
-];
-
-function AnimatedStatCard({
-  value,
-  suffix,
-  label,
-  description,
-  Icon,
-}: StatItem) {
-  const [displayValue, setDisplayValue] = useState(0);
-  const ref = useRef<HTMLDivElement | null>(null);
-  const hasStartedRef = useRef(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const duration = 2200;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting || hasStartedRef.current) return;
-
-          hasStartedRef.current = true;
-          const startTime = performance.now();
-          const start = 0;
-
-          const step = (now: number) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            const current = start + (value - start) * easeOut;
-
-            setDisplayValue(Math.round(current));
-
-            if (progress < 1) {
-              requestAnimationFrame(step);
-            }
-          };
-
-          requestAnimationFrame(step);
-        });
-      },
-      { threshold: 0.4 }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [value]);
-
-  return (
-    <div
-      ref={ref}
-      className="about-stat-card group p-6 flex flex-col justify-between hover-lift"
-    >
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div className="about-stat-icon-circle">
-            <Icon className="about-stat-icon" />
-          </div>
-          <div className="about-stat-pill">{label}</div>
-        </div>
-        <div className="about-stat-tag">
-          <span className="about-stat-tag-dot" />
-        </div>
-      </div>
-
-      <div className="mb-1 text-4xl font-semibold tracking-tight text-foreground">
-        {displayValue}
-        {suffix}
-      </div>
-      <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
-  );
+interface StatItem {
+    value: number;
+    label: string;
+    image: string; // Background image for the card
 }
 
 const StatsSection = () => {
-  return (
-    <div className="space-y-10 about-animate-up about-delay-1">
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <span className="section-eyebrow">Rakamlarla IEEE</span>
-        <h2 className="heading-2 text-foreground">
-          Başarılarımızı ve büyümemizi keşfet
-        </h2>
-        <p className="body-md text-muted-foreground">
-          Her yıl onlarca etkinlik, yüzlerce katılımcı ve birçok ödülle
-          sürekli gelişen bir öğrenci koluyuz.
-        </p>
-      </div>
+    const [counters, setCounters] = useState({
+        members: 0,
+        events: 0,
+        committees: 0,
+        projects: 0
+    });
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <AnimatedStatCard key={stat.label} {...stat} />
-        ))}
-      </div>
-    </div>
-  );
+    const stats: StatItem[] = [
+        {
+            value: 500,
+            label: 'Aktif Üye',
+            image: '/industry.jpg'
+        },
+        {
+            value: 50,
+            label: 'Etkinlik',
+            image: '/women-society.jpg'
+        },
+        {
+            value: 10,
+            label: 'Komite',
+            image: '/sight.jpg'
+        },
+        {
+            value: 100,
+            label: 'Proje',
+            image: '/powerenergy-society.jpg'
+        }
+    ];
+
+    useEffect(() => {
+        const duration = 2000;
+        const steps = 60;
+        const interval = duration / steps;
+
+        const animateCounter = (target: number, key: keyof typeof counters) => {
+            let current = 0;
+            const increment = target / steps;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    setCounters(prev => ({ ...prev, [key]: target }));
+                    clearInterval(timer);
+                } else {
+                    setCounters(prev => ({ ...prev, [key]: Math.floor(current) }));
+                }
+            }, interval);
+        };
+
+        // Start animations
+        setTimeout(() => animateCounter(stats[0].value, 'members'), 100);
+        setTimeout(() => animateCounter(stats[1].value, 'events'), 200);
+        setTimeout(() => animateCounter(stats[2].value, 'committees'), 300);
+        setTimeout(() => animateCounter(stats[3].value, 'projects'), 400);
+    }, []);
+
+    const displayValues = [
+        counters.members,
+        counters.events,
+        counters.committees,
+        counters.projects
+    ];
+
+    return (
+        <section className="w-full bg-white py-16 md:py-24 px-4 md:px-8">
+            <div className="max-w-7xl mx-auto">
+                <div className="text-center mb-12 about-animate-up about-delay-0">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold tracking-wider uppercase mb-4">
+                        <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+                        Sayılarla IEEE
+                    </div>
+                    <h2 className="heading-2 mb-4 text-foreground">
+                        Büyüyen Topluluğumuz
+                    </h2>
+                    <p className="body-lg text-muted-foreground max-w-2xl mx-auto">
+                        Başarılarımızın somut göstergeleri ve her geçen gün büyüyen ailemiz.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                    {stats.map((stat, index) => (
+                        <div
+                            key={stat.label}
+                            className="group relative rounded-2xl overflow-hidden aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 about-animate-up"
+                            style={{ animationDelay: `${0.1 + index * 0.1}s` }}
+                        >
+                            {/* Background Image */}
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                                style={{ backgroundImage: `url(${stat.image})` }}
+                            />
+                            
+                            {/* Gradient Overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 group-hover:via-black/60 transition-colors duration-500" />
+                            
+                            {/* Content */}
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-4">
+                                <div className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 tracking-tight group-hover:scale-110 transition-transform duration-300">
+                                    +{displayValues[index]}
+                                </div>
+                                <div className="text-sm md:text-base font-medium opacity-90 uppercase tracking-widest border-t border-white/30 pt-2 mt-2">
+                                    {stat.label}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
 };
 
 export default StatsSection;

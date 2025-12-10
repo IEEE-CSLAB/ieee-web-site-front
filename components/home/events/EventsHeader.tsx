@@ -27,13 +27,13 @@ const EventsHeader = () => {
                     </button>
                 </div>
 
-                <button className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors whitespace-nowrap">
+                <a href="/events" className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors whitespace-nowrap">
                     Tümünü Gör
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M7 17L17 7" />
                         <path d="M7 7h10v10" />
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
     );
