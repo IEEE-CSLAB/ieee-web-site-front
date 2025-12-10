@@ -1,37 +1,55 @@
 import { notFound } from 'next/navigation';
 import BlogDetail from '@/components/blog/BlogDetail';
 import Footer from '@/components/Footer';
-import { getBlogById } from '@/data/blogs';
+import Navbar from '@/components/Navbar';
+import fs from 'fs/promises';
+import path from 'path';
 
-interface BlogDetailPageProps {
-    params: {
-        id: string;
-    };
+async function getBlogById(id: number) {
+    try {
+        const filePath = path.join(process.cwd(), 'data', 'blogs.json');
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const blogs = JSON.parse(fileContent);
+        return blogs.find((blog: any) => blog.id === id);
+    } catch (error) {
+        return undefined;
+    }
 }
 
-export default function BlogDetailPage({ params }: BlogDetailPageProps) {
-    const blogId = parseInt(params.id);
-    const blog = getBlogById(blogId);
+interface BlogDetailPageProps {
+    params: Promise<{
+        id: string;
+    }>;
+}
+
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
+    const { id } = await params;
+    const blogId = parseInt(id);
+    const blog = await getBlogById(blogId);
 
     if (!blog) {
         notFound();
     }
 
     return (
-        <div className="min-h-screen bg-white py-12 relative">
+        <div className="min-h-screen bg-white pb-12 pt-32 relative">
             {/* Ana Sayfaya Dön Butonu */}
-            <div className="absolute top-8 left-8 z-20">
+            {/* Navbar */}
+            <div className="fixed top-8 left-8 z-50">
+                <Navbar />
+            </div>
+
+            {/* Mobile Home Button (Removed as Navbar is now responsive) */}
+            <div className="fixed top-8 left-8 z-50 md:hidden">
                 <a
                     href="/"
-                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-900 
-                     bg-white/90 backdrop-blur-md border border-gray-200 
-                     hover:bg-gray-50 transition-all duration-300 shadow-sm flex items-center gap-2"
+                    className="p-3 rounded-full text-gray-900 bg-white/90 backdrop-blur-md border border-gray-200 
+                     hover:bg-gray-50 transition-all duration-300 shadow-sm flex items-center justify-center"
                 >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M19 12H5" />
                         <path d="M12 19l-7-7 7-7" />
                     </svg>
-                    Ana Sayfa
                 </a>
             </div>
 
@@ -45,4 +63,3 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
         </div>
     );
 }
-

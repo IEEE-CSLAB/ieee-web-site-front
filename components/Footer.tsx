@@ -123,10 +123,7 @@ const Footer = () => {
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-center pt-6 text-gray-500 text-xs">
-                    <div className="flex gap-4 mb-2 md:mb-0">
-                        <a href="#" className="hover:text-gray-900 transition-colors">Gizlilik Politikası</a>
-                        <a href="#" className="hover:text-gray-900 transition-colors">Kullanım Şartları</a>
-                    </div>
+
                     <div>
                         Tüm hakları saklıdır © 2024 IEEE Antalya
                     </div>

@@ -1,12 +1,29 @@
 "use client";
 
 import React, { useState } from 'react';
+import Navbar from '@/components/Navbar';
 import BlogHeader from './BlogHeader';
 import BlogGrid from './BlogGrid';
 import Footer from '@/components/Footer';
-import { blogs } from '@/data/blogs';
 
-const BlogPage = () => {
+interface Blog {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+    image: string;
+    date: string;
+    author?: string;
+    link?: string;
+    isImportant?: boolean;
+    content?: string;
+}
+
+interface BlogPageProps {
+    blogs: Blog[];
+}
+
+const BlogPage = ({ blogs }: BlogPageProps) => {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const blogsPerPage = 8;
@@ -17,7 +34,7 @@ const BlogPage = () => {
         link: `/blog/${blog.id}`
     }));
 
-    const filteredBlogs = selectedCategory 
+    const filteredBlogs = selectedCategory
         ? blogsWithLinks.filter(blog => blog.category === selectedCategory)
         : blogsWithLinks;
 
@@ -35,20 +52,24 @@ const BlogPage = () => {
     }, [selectedCategory]);
 
     return (
-        <div className="min-h-screen bg-white py-12 relative">
+        <div className="min-h-screen bg-white pb-12 pt-32 relative">
             {/* Ana Sayfaya Dön Butonu */}
-            <div className="absolute top-8 left-8 z-20">
+            {/* Navbar */}
+            <div className="fixed top-8 left-8 z-50">
+                <Navbar />
+            </div>
+
+            {/* Mobile Home Button (Removed as Navbar is now responsive) */}
+            <div className="fixed top-8 left-8 z-50 md:hidden">
                 <a
                     href="/"
-                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-900 
-                     bg-white/90 backdrop-blur-md border border-gray-200 
-                     hover:bg-gray-50 transition-all duration-300 shadow-sm flex items-center gap-2"
+                    className="p-3 rounded-full text-gray-900 bg-white/90 backdrop-blur-md border border-gray-200 
+                     hover:bg-gray-50 transition-all duration-300 shadow-sm flex items-center justify-center"
                 >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M19 12H5" />
                         <path d="M12 19l-7-7 7-7" />
                     </svg>
-                    Ana Sayfa
                 </a>
             </div>
 
@@ -60,7 +81,7 @@ const BlogPage = () => {
                 {/* Intro Text */}
                 <div className="mb-12">
                     <p className="body-lg text-muted-foreground max-w-3xl">
-                        Teknoloji, mühendislik, kariyer ve IEEE dünyasından en güncel yazılar, haberler ve içgörüler. 
+                        Teknoloji, mühendislik, kariyer ve IEEE dünyasından en güncel yazılar, haberler ve içgörüler.
                         Bilgi paylaşımı ve öğrenme topluluğumuzun bir parçası olun.
                     </p>
                 </div>
@@ -69,11 +90,10 @@ const BlogPage = () => {
                 <div className="mb-8 flex flex-wrap gap-3">
                     <button
                         onClick={() => setSelectedCategory(null)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            selectedCategory === null
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-card text-foreground border border-border hover:bg-secondary'
-                        }`}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === null
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-card text-foreground border border-border hover:bg-secondary'
+                            }`}
                     >
                         Tümü
                     </button>
@@ -81,11 +101,10 @@ const BlogPage = () => {
                         <button
                             key={category}
                             onClick={() => setSelectedCategory(category)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                                selectedCategory === category
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-card text-foreground border border-border hover:bg-secondary'
-                            }`}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-card text-foreground border border-border hover:bg-secondary'
+                                }`}
                         >
                             {category}
                         </button>
@@ -107,16 +126,15 @@ const BlogPage = () => {
                                 <path d="M15 18l-6-6 6-6" />
                             </svg>
                         </button>
-                        
+
                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                             <button
                                 key={page}
                                 onClick={() => setCurrentPage(page)}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                                    currentPage === page
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-card text-foreground border border-border hover:bg-secondary'
-                                }`}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${currentPage === page
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-card text-foreground border border-border hover:bg-secondary'
+                                    }`}
                             >
                                 {page}
                             </button>

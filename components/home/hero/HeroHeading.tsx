@@ -11,7 +11,7 @@ const HeroHeading = () => {
             </p>
 
             <div className="flex items-center gap-4">
-                <a href="/committees" className="group flex items-center gap-2 bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-900 transition-all duration-300">
+                <a href="/contact" className="group flex items-center gap-2 bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-900 transition-all duration-300">
                     Bize Katılın
                     <span className="bg-white text-black rounded-full p-1 w-6 h-6 flex items-center justify-center group-hover:translate-x-1 transition-transform">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

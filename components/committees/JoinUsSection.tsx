@@ -11,12 +11,12 @@ const JoinUsSection = () => {
                     IEEE Öğrenci Kolu'na üye olarak komitelerimizden birinde yer alabilir, teknik becerilerini geliştirebilir ve yeni arkadaşlıklar kurabilirsin.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <button className="px-8 py-3 bg-white text-primary rounded-full font-semibold hover:bg-gray-100 transition-colors">
+                    <a href="/contact" className="px-8 py-3 bg-white text-primary rounded-full font-semibold hover:bg-gray-100 transition-colors text-center">
                         Üye Ol
-                    </button>
-                    <button className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-colors">
+                    </a>
+                    <a href="/contact" className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-colors text-center">
                         İletişime Geç
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

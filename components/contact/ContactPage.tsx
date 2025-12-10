@@ -1,53 +1,38 @@
-"use client";
-
 import React from 'react';
-import ContactHeader from './ContactHeader';
-import ContactInfo from './ContactInfo';
+import Navbar from '@/components/Navbar';
+import ContactHero from './ContactHero';
 import ContactForm from './ContactForm';
-import ContactMap from './ContactMap';
-import Footer from '@/components/Footer';
+import ContactInfo from './ContactInfo';
 
 const ContactPage = () => {
     return (
-        <div className="min-h-screen bg-white py-12 relative">
-            {/* Ana Sayfaya Dön Butonu */}
-            <div className="absolute top-8 left-8 z-20">
-                <a
-                    href="/"
-                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-900 
-                     bg-white/90 backdrop-blur-md border border-gray-200 
-                     hover:bg-gray-50 transition-all duration-300 shadow-sm flex items-center gap-2"
-                >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 12H5" />
-                        <path d="M12 19l-7-7 7-7" />
-                    </svg>
-                    Ana Sayfa
-                </a>
+        <main className="w-full min-h-screen bg-white">
+            {/* Navbar */}
+            <div className="fixed top-8 left-8 z-50">
+                <Navbar />
             </div>
 
-            {/* Content Box - Sağ ve soldan 32px boşluk, açık gri */}
-            <div className="mx-8 bg-gray-100 rounded-2xl p-8 md:p-12">
-                {/* Header */}
-                <ContactHeader />
+            <ContactHero />
 
-                {/* Contact Info and Form Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <ContactInfo />
-                    <ContactForm />
+            <section className="w-full py-16 px-6 md:px-10">
+                <div className="mx-auto max-w-[1400px]">
+                    <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 justify-center items-start">
+                        {/* Left Side: Form */}
+                        <div className="w-full lg:w-3/5">
+                            <ContactForm />
+                        </div>
+
+                        {/* Right Side: Info */}
+                        <div className="hidden lg:block w-px bg-gray-100 h-[600px] self-center mx-4" /> {/* Divider */}
+
+                        <div className="w-full lg:w-2/5 flex justify-center lg:justify-start">
+                            <ContactInfo />
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            {/* Map Section (Outside the box) */}
-            <div className="mx-8 mt-8 mb-8">
-                <ContactMap />
-            </div>
-
-            {/* Footer */}
-            <Footer />
-        </div>
+            </section>
+        </main>
     );
 };
 
 export default ContactPage;
-

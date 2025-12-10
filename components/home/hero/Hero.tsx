@@ -1,7 +1,8 @@
 import React from 'react';
-import HeroNavigation from './HeroNavigation';
+import Navbar from '@/components/Navbar';
 import HeroSocials from './HeroSocials';
 import HeroHeading from './HeroHeading';
+import ImportantEventBox from './ImportantEventBox';
 
 const Hero = () => {
     return (
@@ -11,7 +12,7 @@ const Hero = () => {
                 <div
                     className="absolute inset-0 bg-cover bg-center z-0"
                     style={{
-                        backgroundImage: 'url("https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80")',
+                        backgroundImage: 'url("/d8bcf3886bea331b947ac08a4c801105.jpg")',
                         filter: 'brightness(0.85)'
                     }}
                 >
@@ -20,9 +21,12 @@ const Hero = () => {
                 </div>
 
                 {/* Components */}
-                <HeroNavigation />
+                <div className="absolute top-8 left-8 z-20">
+                    <Navbar />
+                </div>
                 <HeroSocials />
                 <HeroHeading />
+                <ImportantEventBox />
             </div>
         </section>
     );
