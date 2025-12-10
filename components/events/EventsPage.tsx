@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
+import NavbarWrapper from '@/components/NavbarWrapper';
 import EventsHeader from './EventsHeader';
 import EventsGrid from './EventsGrid';
 import Footer from '@/components/Footer';
@@ -25,36 +25,38 @@ interface EventsPageProps {
 const EventsPage = ({ events }: EventsPageProps) => {
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-    // Hardcoded events removed - passed as props
+    // Helper function to parse Turkish date format
+    const parseTurkishDate = (dateStr: string): Date => {
+        const months: { [key: string]: number } = {
+            'Ocak': 0, 'Şubat': 1, 'Mart': 2, 'Nisan': 3, 'Mayıs': 4, 'Haziran': 5,
+            'Temmuz': 6, 'Ağustos': 7, 'Eylül': 8, 'Ekim': 9, 'Kasım': 10, 'Aralık': 11
+        };
+        
+        // Handle date ranges like "22-24 Mart 2024"
+        const datePart = dateStr.split(' ')[0];
+        const day = parseInt(datePart.split('-')[0]);
+        const monthName = dateStr.split(' ').find(part => months.hasOwnProperty(part)) || 'Ocak';
+        const month = months[monthName] ?? 0;
+        const year = parseInt(dateStr.split(' ').find(part => /^\d{4}$/.test(part)) || '2024');
+        return new Date(year, month, day);
+    };
 
+    // Sort events by date (newest first)
+    const sortedEvents = [...events].sort((a, b) => {
+        const dateA = parseTurkishDate(a.date);
+        const dateB = parseTurkishDate(b.date);
+        return dateB.getTime() - dateA.getTime(); // Newest first
+    });
 
     const filteredEvents = selectedTag
-        ? events.filter(event => event.tag === selectedTag)
-        : events;
+        ? sortedEvents.filter(event => event.tag === selectedTag)
+        : sortedEvents;
 
     const uniqueTags = Array.from(new Set(events.map(event => event.tag)));
 
     return (
         <div className="min-h-screen bg-white pb-12 pt-32 relative">
-            {/* Ana Sayfaya Dön Butonu */}
-            {/* Navbar */}
-            <div className="fixed top-8 left-8 z-50">
-                <Navbar />
-            </div>
-
-            {/* Mobile Home Button (Removed as Navbar is now responsive) */}
-            <div className="fixed top-8 left-8 z-50 md:hidden">
-                <a
-                    href="/"
-                    className="p-3 rounded-full text-gray-900 bg-white/90 backdrop-blur-md border border-gray-200 
-                     hover:bg-gray-50 transition-all duration-300 shadow-sm flex items-center justify-center"
-                >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 12H5" />
-                        <path d="M12 19l-7-7 7-7" />
-                    </svg>
-                </a>
-            </div>
+            <NavbarWrapper />
 
             {/* Content Box - Sağ ve soldan 32px boşluk, açık gri */}
             <div className="mx-8 bg-gray-100 rounded-2xl p-8 md:p-12">

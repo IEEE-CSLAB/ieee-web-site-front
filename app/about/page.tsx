@@ -12,3 +12,4 @@ export default async function About() {
     const committees = await getCommittees();
     return <AboutPage committees={committees} />;
 }
+

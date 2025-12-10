@@ -7,9 +7,9 @@ interface BlogDetailProps {
 
 const BlogDetail = ({ blog }: BlogDetailProps) => {
     return (
-        <article className="max-w-4xl mx-auto">
+        <article className="w-full max-w-4xl mx-auto">
             {/* Header Image */}
-            <div className="relative w-full h-96 mb-8 rounded-2xl overflow-hidden">
+            <div className="relative w-full h-48 md:h-96 mb-6 md:mb-8 rounded-2xl overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url(${blog.image})` }}
@@ -27,13 +27,13 @@ const BlogDetail = ({ blog }: BlogDetailProps) => {
             </div>
 
             {/* Content */}
-            <div className="bg-card rounded-2xl p-8 md:p-12 border border-border">
+            <div className="bg-card rounded-2xl p-4 md:p-12 border border-border">
                 {/* Meta Information */}
-                <div className="flex flex-wrap items-center gap-4 mb-6 pb-6 border-b border-border">
-                    <span className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20">
+                <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6 pb-4 md:pb-6 border-b border-border">
+                    <span className="px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-medium border border-primary/20">
                         {blog.category}
                     </span>
-                    <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <div className="flex items-center gap-1 md:gap-2 text-muted-foreground text-xs md:text-sm">
                         <span>{blog.date}</span>
                         {blog.author && (
                             <>
@@ -45,12 +45,12 @@ const BlogDetail = ({ blog }: BlogDetailProps) => {
                 </div>
 
                 {/* Title */}
-                <h1 className="heading-1 text-foreground mb-6">
+                <h1 className="text-2xl md:heading-1 text-foreground mb-4 md:mb-6">
                     {blog.title}
                 </h1>
 
                 {/* Description */}
-                <p className="body-lg text-muted-foreground mb-8 leading-relaxed">
+                <p className="text-sm md:body-lg text-muted-foreground mb-6 md:mb-8 leading-relaxed">
                     {blog.description}
                 </p>
 
@@ -105,10 +105,10 @@ const BlogDetail = ({ blog }: BlogDetailProps) => {
                 )}
 
                 {/* Back to Blog Button */}
-                <div className="mt-12 pt-8 border-t border-border">
+                <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-border">
                     <a
                         href="/blog"
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-dark transition-colors"
+                        className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-lg bg-primary text-primary-foreground text-sm md:text-base font-medium hover:bg-primary-dark transition-colors"
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M19 12H5" />

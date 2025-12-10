@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 interface NavbarProps {
     variant?: 'light' | 'dark' | 'transparent';
@@ -9,6 +10,7 @@ interface NavbarProps {
 
 const Navbar = ({ className = '' }: NavbarProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const pathname = usePathname();
 
     const navItems = [
         { label: 'Hakkımızda', link: '/about' },
@@ -20,10 +22,10 @@ const Navbar = ({ className = '' }: NavbarProps) => {
     return (
         <div className={`relative ${className}`}>
             {/* Desktop Navbar */}
-            <nav className="hidden md:flex items-center gap-1 p-1 pl-2 bg-[#1C1C1C] rounded-full border border-white/5 shadow-2xl max-w-full">
+            <nav className="hidden md:flex items-center gap-1.5 p-1.5 pl-2 bg-white rounded-full border border-black/5 shadow-2xl max-w-full">
                 {/* Logo / Icon */}
-                <a href="/" className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white flex-shrink-0">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <a href="/" className="flex items-center justify-center w-9 h-9 rounded-full bg-black/10 hover:bg-black/20 transition-colors text-black flex-shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10" />
                         <path d="M2 12h20" />
                         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -31,22 +33,33 @@ const Navbar = ({ className = '' }: NavbarProps) => {
                 </a>
 
                 {/* Links */}
-                <div className="flex items-center px-2 gap-1 overflow-hidden">
-                    {navItems.map((item) => (
-                        <a
-                            key={item.label}
-                            href={item.link}
-                            className="px-2 md:px-3 lg:px-4 py-2 text-xs md:text-sm font-medium text-gray-300 hover:text-white transition-colors whitespace-nowrap"
-                        >
-                            {item.label}
-                        </a>
-                    ))}
+                <div className="flex items-center px-2 gap-1.5 overflow-hidden">
+                    {navItems.map((item) => {
+                        const isActive = pathname === item.link || (item.link !== '/' && pathname?.startsWith(item.link));
+                        return (
+                            <a
+                                key={item.label}
+                                href={item.link}
+                                className={`px-3 md:px-4 lg:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium rounded-full transition-colors whitespace-nowrap ${
+                                    isActive
+                                        ? 'bg-black text-white'
+                                        : 'text-gray-700 hover:text-black'
+                                }`}
+                            >
+                                {item.label}
+                            </a>
+                        );
+                    })}
                 </div>
 
                 {/* Right Button (Contact) */}
                 <a
                     href="/contact"
-                    className="px-3 md:px-4 lg:px-5 py-2 md:py-2.5 bg-white text-black text-xs md:text-sm font-semibold rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap flex-shrink-0"
+                    className={`px-4 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs md:text-sm font-semibold rounded-full transition-colors whitespace-nowrap flex-shrink-0 ${
+                        pathname === '/contact'
+                            ? 'bg-black text-white hover:bg-gray-800'
+                            : 'text-gray-700 hover:text-black'
+                    }`}
                 >
                     İletişim
                 </a>
@@ -56,7 +69,7 @@ const Navbar = ({ className = '' }: NavbarProps) => {
             <div className="md:hidden">
                 <button 
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="p-3 bg-[#1C1C1C] rounded-full text-white border border-white/5 shadow-2xl"
+                    className="p-3 bg-white rounded-full text-black border border-black/5 shadow-2xl"
                 >
                     {isMenuOpen ? (
                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -81,27 +94,42 @@ const Navbar = ({ className = '' }: NavbarProps) => {
                         className="fixed inset-0 bg-black/20 z-40 md:hidden"
                         onClick={() => setIsMenuOpen(false)}
                     />
-                    <div className="absolute top-14 left-0 w-56 max-w-[calc(100vw-4rem)] bg-[#1C1C1C] rounded-2xl border border-white/5 shadow-2xl overflow-hidden md:hidden flex flex-col p-2 z-50">
+                    <div className="absolute top-14 left-0 w-56 max-w-[calc(100vw-4rem)] bg-white rounded-2xl border border-black/5 shadow-2xl overflow-hidden md:hidden flex flex-col p-2 z-50">
                          <a 
                             href="/" 
-                            className="px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
+                            className={`px-4 py-3 text-sm font-medium rounded-xl transition-colors ${
+                                pathname === '/'
+                                    ? 'bg-black text-white'
+                                    : 'text-gray-700 hover:text-black hover:bg-black/10'
+                            }`}
                             onClick={() => setIsMenuOpen(false)}
                         >
                             Ana Sayfa
                         </a>
-                        {navItems.map((item) => (
-                            <a
-                                key={item.label}
-                                href={item.link}
-                                className="px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                {item.label}
-                            </a>
-                        ))}
+                        {navItems.map((item) => {
+                            const isActive = pathname === item.link || (item.link !== '/' && pathname?.startsWith(item.link));
+                            return (
+                                <a
+                                    key={item.label}
+                                    href={item.link}
+                                    className={`px-4 py-3 text-sm font-medium rounded-xl transition-colors ${
+                                        isActive
+                                            ? 'bg-black text-white'
+                                            : 'text-gray-700 hover:text-black hover:bg-black/10'
+                                    }`}
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {item.label}
+                                </a>
+                            );
+                        })}
                         <a
                             href="/contact"
-                            className="mt-2 px-4 py-3 text-sm font-bold text-black bg-white hover:bg-gray-200 rounded-xl transition-colors text-center"
+                            className={`mt-2 px-4 py-3 text-sm font-bold rounded-xl transition-colors text-center ${
+                                pathname === '/contact'
+                                    ? 'bg-black text-white hover:bg-gray-800'
+                                    : 'text-gray-700 hover:text-black hover:bg-black/10'
+                            }`}
                             onClick={() => setIsMenuOpen(false)}
                         >
                             İletişim

@@ -1,8 +1,7 @@
 "use client";
 
 import React from 'react';
-import Navbar from '@/components/Navbar';
-import AboutHero from './AboutHero';
+import NavbarWrapper from '@/components/NavbarWrapper';
 import MissionVisionSection from './MissionVisionSection';
 import StatsSection from './StatsSection';
 import CommitteesShowcase from './CommitteesShowcase';
@@ -25,33 +24,35 @@ interface AboutPageProps {
 
 const AboutPage = ({ committees }: AboutPageProps) => {
     return (
-        <main className="min-h-screen bg-white">
-            {/* Navbar */}
-            <div className="fixed top-8 left-8 z-50">
-                <Navbar />
-            </div>
-
-            {/* Hero Section */}
-            <AboutHero />
+        <main className="h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-white relative">
+            <NavbarWrapper />
 
             {/* Mission & Vision Section */}
-            <MissionVisionSection />
+            <section className="snap-start w-full min-h-screen flex items-center">
+                <MissionVisionSection />
+            </section>
 
             {/* Stats Section */}
-            <StatsSection />
+            <section className="snap-start w-full min-h-screen flex items-center">
+                <StatsSection />
+            </section>
 
             {/* Committees Showcase */}
-            <CommitteesShowcase committees={committees} />
+            <section className="snap-start w-full min-h-screen flex items-center">
+                <CommitteesShowcase committees={committees} />
+            </section>
 
             {/* CTA Section */}
-            <section className="w-full bg-white py-16 md:py-24 px-4 md:px-8">
-                <div className="max-w-7xl mx-auto">
+            <section className="snap-start w-full min-h-screen flex items-center bg-white py-16 md:py-24 px-4 md:px-8">
+                <div className="max-w-7xl mx-auto w-full">
                     <JoinUsSection />
                 </div>
             </section>
 
             {/* Footer */}
-            <Footer />
+            <section className="snap-start w-full">
+                <Footer />
+            </section>
         </main>
     );
 };

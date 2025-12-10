@@ -27,6 +27,7 @@ const EventsGrid = ({ events }: EventsGridProps) => {
                     description={event.description}
                     tag={event.tag}
                     image={event.image}
+                    date={event.date}
                     link={event.link}
                     className={event.className}
                 />

@@ -78,7 +78,7 @@ const StatsSection = () => {
                 <div className="text-center mb-12 about-animate-up about-delay-0">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold tracking-wider uppercase mb-4">
                         <span className="w-2 h-2 rounded-full bg-blue-600"></span>
-                        Rakamlarla Biz
+                        Sayılarla IEEE
                     </div>
                     <h2 className="heading-2 mb-4 text-foreground">
                         Büyüyen Topluluğumuz
@@ -122,3 +122,4 @@ const StatsSection = () => {
 };
 
 export default StatsSection;
+
