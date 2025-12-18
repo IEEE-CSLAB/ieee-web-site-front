@@ -1,14 +1,7 @@
-import CommitteesPage from '@/components/committees/CommitteesPage';
-import fs from 'fs/promises';
-import path from 'path';
-
-async function getCommittees() {
-  const filePath = path.join(process.cwd(), 'data', 'committees.json');
-  const fileContent = await fs.readFile(filePath, 'utf-8');
-  return JSON.parse(fileContent);
-}
+import CommitteesPage from "@/components/committees/CommitteesPage";
+import { fetchCommittees } from "@/lib/services/committeesApi";
 
 export default async function Committees() {
-  const committees = await getCommittees();
+  const committees = await fetchCommittees();
   return <CommitteesPage committees={committees} />;
 }

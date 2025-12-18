@@ -5,17 +5,23 @@ import NavbarWrapper from '@/components/NavbarWrapper';
 import EventsHeader from './EventsHeader';
 import EventsGrid from './EventsGrid';
 import Footer from '@/components/Footer';
+import { API_URL } from '@/lib/api';
 
 interface Event {
     id: number;
     title: string;
-    description: string;
-    tag: string;
-    image: string;
-    date: string;
-    location: string;
-    link: string;
+    description?: string | null;
+    tag?: string;
+    image?: string | null;
+    date?: string;
+    location?: string | null;
+    link?: string;
     isImportant?: boolean;
+
+    // Fields coming from backend DTO
+    startDate?: string;
+    endDate?: string;
+    coverImageUrl?: string;
 }
 
 interface EventsPageProps {
@@ -25,8 +31,65 @@ interface EventsPageProps {
 const EventsPage = ({ events }: EventsPageProps) => {
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-    // Helper function to parse Turkish date format
-    const parseTurkishDate = (dateStr: string): Date => {
+    // Normalize events with proper image URL (from backend coverImageUrl if available)
+    const normalizedEvents = events.map((event) => {
+        const rawImage =
+            (event.coverImageUrl as string | undefined) ||
+            (event.image as string | undefined) ||
+            undefined;
+
+        const image =
+            rawImage && rawImage.startsWith('http')
+                ? rawImage
+                : rawImage
+                ? `${API_URL}${rawImage}`
+                : undefined;
+
+        const startDate = event.startDate ? new Date(event.startDate) : null;
+        const date = startDate
+            ? startDate.toLocaleDateString('tr-TR', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+              })
+            : event.date;
+
+        const tag =
+            event.isImportant
+                ? 'Önemli'
+                : event.tag ||
+                  (Array.isArray((event as any).committees) &&
+                      (event as any).committees[0]?.name) ||
+                  'Etkinlik';
+
+        const location = event.location ?? undefined;
+        const description = (event.description as string | null) ?? '';
+
+        return {
+            ...event,
+            image,
+            date,
+            tag,
+            location,
+            description,
+        };
+    });
+
+    // Helper function to get a usable Date for sorting
+    const getEventDate = (event: Event): Date => {
+        // Prefer backend StartDate if available (ISO string)
+        if (event.startDate) {
+            const d = new Date(event.startDate);
+            if (!isNaN(d.getTime())) return d;
+        }
+
+        const dateStr = event.date;
+        if (!dateStr) {
+            // Fallback far in the past if no date info
+            return new Date(0);
+        }
+
+        // Parse Turkish date format from legacy JSON data
         const months: { [key: string]: number } = {
             'Ocak': 0, 'Şubat': 1, 'Mart': 2, 'Nisan': 3, 'Mayıs': 4, 'Haziran': 5,
             'Temmuz': 6, 'Ağustos': 7, 'Eylül': 8, 'Ekim': 9, 'Kasım': 10, 'Aralık': 11
@@ -42,9 +105,9 @@ const EventsPage = ({ events }: EventsPageProps) => {
     };
 
     // Sort events by date (newest first)
-    const sortedEvents = [...events].sort((a, b) => {
-        const dateA = parseTurkishDate(a.date);
-        const dateB = parseTurkishDate(b.date);
+    const sortedEvents = [...normalizedEvents].sort((a, b) => {
+        const dateA = getEventDate(a);
+        const dateB = getEventDate(b);
         return dateB.getTime() - dateA.getTime(); // Newest first
     });
 
@@ -52,7 +115,9 @@ const EventsPage = ({ events }: EventsPageProps) => {
         ? sortedEvents.filter(event => event.tag === selectedTag)
         : sortedEvents;
 
-    const uniqueTags = Array.from(new Set(events.map(event => event.tag)));
+    const uniqueTags = Array.from(
+        new Set(normalizedEvents.map(event => event.tag).filter(Boolean) as string[])
+    );
 
     return (
         <div className="min-h-screen bg-white pb-12 pt-32 relative">

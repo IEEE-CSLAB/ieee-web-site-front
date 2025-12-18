@@ -2,10 +2,10 @@ import React from 'react';
 
 interface BlogCardProps {
     title: string;
-    description: string;
-    category: string;
-    image: string;
-    date: string;
+    description?: string;
+    category?: string;
+    image?: string;
+    date?: string;
     author?: string;
     className?: string;
     link?: string;
@@ -17,10 +17,12 @@ const BlogCard = ({ title, description, category, image, date, author, className
         <a href={link} className={`group flex flex-col md:flex-row items-stretch gap-4 md:gap-6 bg-card rounded-2xl overflow-hidden cursor-pointer border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300 ${className}`}>
             {/* Image Section */}
             <div className="relative flex-shrink-0 w-full md:w-72 h-48 md:h-auto overflow-hidden">
-                <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    style={{ backgroundImage: `url(${image})` }}
-                />
+                {image && (
+                    <div
+                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                        style={{ backgroundImage: `url(${image})` }}
+                    />
+                )}
                 {/* Important Badge */}
                 {isImportant && (
                     <div className="absolute top-3 left-3 z-10">
@@ -36,10 +38,10 @@ const BlogCard = ({ title, description, category, image, date, author, className
                 <div>
                     <div className="flex items-center justify-between mb-3">
                         <span className="px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-medium border border-primary/20">
-                            {category}
+                            {category ?? "Genel"}
                         </span>
                         <div className="flex items-center gap-2 text-muted-foreground text-xs md:text-sm">
-                            <span>{date}</span>
+                            {date && <span>{date}</span>}
                             {author && (
                                 <>
                                     <span>•</span>

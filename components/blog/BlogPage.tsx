@@ -9,14 +9,17 @@ import Footer from '@/components/Footer';
 interface Blog {
     id: number;
     title: string;
-    description: string;
-    category: string;
-    image: string;
-    date: string;
+    description?: string;
+    category?: string;
+    image?: string;
+    date?: string;
     author?: string;
     link?: string;
     isImportant?: boolean;
     content?: string;
+
+    // Backend DTO fields
+    createdAt?: string;
 }
 
 interface BlogPageProps {
@@ -28,8 +31,20 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
     const [currentPage, setCurrentPage] = useState(1);
     const blogsPerPage = 8;
 
-    // Helper function to parse Turkish date format
-    const parseTurkishDate = (dateStr: string): Date => {
+    // Helper function to get a usable Date for sorting
+    const getBlogDate = (blog: Blog): Date => {
+        // Prefer backend CreatedAt if available (ISO string)
+        if (blog.createdAt) {
+            const d = new Date(blog.createdAt);
+            if (!isNaN(d.getTime())) return d;
+        }
+
+        const dateStr = blog.date;
+        if (!dateStr) {
+            return new Date(0);
+        }
+
+        // Parse Turkish date format from legacy JSON data
         const months: { [key: string]: number } = {
             'Ocak': 0, 'Şubat': 1, 'Mart': 2, 'Nisan': 3, 'Mayıs': 4, 'Haziran': 5,
             'Temmuz': 6, 'Ağustos': 7, 'Eylül': 8, 'Ekim': 9, 'Kasım': 10, 'Aralık': 11
@@ -52,8 +67,8 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
             link: `/blog/${blog.id}`
         }))
         .sort((a, b) => {
-            const dateA = parseTurkishDate(a.date);
-            const dateB = parseTurkishDate(b.date);
+            const dateA = getBlogDate(a);
+            const dateB = getBlogDate(b);
             return dateB.getTime() - dateA.getTime(); // Newest first
         });
 
@@ -61,7 +76,9 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
         ? blogsWithLinks.filter(blog => blog.category === selectedCategory)
         : blogsWithLinks;
 
-    const uniqueCategories = Array.from(new Set(blogsWithLinks.map(blog => blog.category)));
+    const uniqueCategories = Array.from(
+        new Set(blogsWithLinks.map(blog => blog.category).filter(Boolean) as string[])
+    );
 
     // Pagination logic
     const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);

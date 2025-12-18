@@ -1,14 +1,7 @@
-import EventsPage from '@/components/events/EventsPage';
-import fs from 'fs/promises';
-import path from 'path';
-
-async function getEvents() {
-  const filePath = path.join(process.cwd(), 'data', 'events.json');
-  const fileContent = await fs.readFile(filePath, 'utf-8');
-  return JSON.parse(fileContent);
-}
+import EventsPage from "@/components/events/EventsPage";
+import { fetchEvents } from "@/lib/services/eventsApi";
 
 export default async function Events() {
-  const events = await getEvents();
+  const events = await fetchEvents();
   return <EventsPage events={events} />;
 }
