@@ -1,14 +1,7 @@
-import BlogPage from '@/components/blog/BlogPage';
-import fs from 'fs/promises';
-import path from 'path';
-
-async function getBlogs() {
-  const filePath = path.join(process.cwd(), 'data', 'blogs.json');
-  const fileContent = await fs.readFile(filePath, 'utf-8');
-  return JSON.parse(fileContent);
-}
+import BlogPage from "@/components/blog/BlogPage";
+import { fetchBlogs } from "@/lib/services/blogsApi";
 
 export default async function Blog() {
-  const blogs = await getBlogs();
+  const blogs = await fetchBlogs();
   return <BlogPage blogs={blogs} />;
 }

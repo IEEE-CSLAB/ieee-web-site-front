@@ -2,10 +2,10 @@ import React from 'react';
 
 interface CommitteeCardProps {
     name: string;
-    description: string;
-    members: number;
-    projects: number;
-    image: string;
+    description?: string;
+    members?: number;
+    projects?: number;
+    image?: string;
     badge?: string;
     className?: string;
     accentColor?: string;
@@ -15,8 +15,8 @@ interface CommitteeCardProps {
 const CommitteeCard: React.FC<CommitteeCardProps> = ({
     name,
     description,
-    members,
-    projects,
+    members = 0,
+    projects = 0,
     image,
     badge,
     className = '',
@@ -26,15 +26,17 @@ const CommitteeCard: React.FC<CommitteeCardProps> = ({
     return (
         <div className={`group relative rounded-2xl overflow-hidden aspect-[4/5] ${className}`}>
             {/* Full Image Background */}
-            <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ 
-                    backgroundImage: `url(${image})`,
-                    backgroundPosition: '50% 50%',
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat'
-                }}
-            />
+            {image && (
+                <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                    style={{ 
+                        backgroundImage: `url(${image})`,
+                        backgroundPosition: '50% 50%',
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat'
+                    }}
+                />
+            )}
             
             {/* Smooth Gradient Overlay - Üstten şeffaf, alttan koyu */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />

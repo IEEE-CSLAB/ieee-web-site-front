@@ -4,9 +4,9 @@ import EventCard from '../home/events/EventCard';
 interface Event {
     id: number;
     title: string;
-    description: string;
-    tag: string;
-    image: string;
+    description?: string;
+    tag?: string;
+    image?: string;
     date?: string;
     location?: string;
     link?: string;
@@ -28,6 +28,7 @@ const EventsGrid = ({ events }: EventsGridProps) => {
                     tag={event.tag}
                     image={event.image}
                     date={event.date}
+                    location={event.location}
                     link={event.link}
                     className={event.className}
                 />
