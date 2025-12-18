@@ -8,4 +8,6 @@ export async function fetchImportantEvents() {
   return apiGet<any[]>("/api/Events/important");
 }
 
-
+export async function fetchEventById(id: string) {
+  return apiGet<any>(`/api/Events/${id}`);
+}

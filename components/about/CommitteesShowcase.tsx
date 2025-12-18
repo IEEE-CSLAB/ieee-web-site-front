@@ -47,3 +47,6 @@ const CommitteesShowcase = ({ committees }: CommitteesShowcaseProps) => {
 
 export default CommitteesShowcase;
 
+
+
+

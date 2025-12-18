@@ -1,4 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IEEE Web Site Frontend
+
+IEEE web sitesi için Next.js Frontend projesi. Bu proje modern web teknolojileri kullanılarak kullanıcı dostu ve performansı yüksek bir arayüz sunar.
+
+## 🚀 Teknolojiler
+
+- **Next.js 16.0** (App Router)
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS 4**
+- **ESLint** & **Prettier**
+
+## 📋 Özellikler
+
+### Event Management UI
+- Etkinliklerin listelenmesi (Grid/List görünümü)
+- Detaylı etkinlik sayfaları
+- Komite bazlı etkinlik filtreleme
+- Önemli ve yaklaşan etkinlikler showcase
+- Etkinlik galerileri entegrasyonu
+
+### Blog Post UI
+- Blog yazıları listeleme
+- Zengin içerikli blog detay sayfası
+- Kategori ve komite bazlı filtreleme
+- Son blog yazılarını öne çıkarma
+
+### Committee Pages
+- Komitelerin tanıtım sayfaları
+- Komite bazlı etkinlik ve blog yazılarının gösterimi
+- Dinamik komite detay sayfaları
+
+### Design & UX
+- Responsive (Mobil Uyumlu) tasarım
+- Modern UI bileşenleri (Glassmorphism, vb.)
+- Hızlı sayfa geçişleri ve animasyonlar
+
+## 📁 Proje Yapısı
+
+```
+IEEEFrontend/
+├── app/                  # App Router Sayfaları ve Layout
+├── components/           # UI Bileşenleri
+│   ├── about/            # Hakkımızda sayfası bileşenleri
+│   ├── blog/             # Blog sayfası bileşenleri
+│   ├── committees/       # Komite sayfası bileşenleri
+│   ├── common/           # Ortak kullanılan bileşenler
+│   ├── home/             # Ana sayfa bileşenleri
+│   └── layout/           # Header, Footer vb. yapılar
+├── data/                 # Statik veriler ve sabitler
+├── lib/                  # Yardımcı fonksiyonlar ve API istemcileri
+├── public/               # Statik dosyalar (görseller, fontlar)
+```
 
 ## 📚 Önemli Dökümantasyon
 
@@ -8,37 +60,45 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 **⚠️ Başlamadan Önce**: 
 - [components/BaslamadanOnce.md](./components/BaslamadanOnce.md) - Proje kuralları ve çalışma prensipleri
 
-## Getting Started
+## 🛠️ Kurulum
 
-First, run the development server:
+### Gereksinimler
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js 18.17 veya üzeri
+- npm veya yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Adımlar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Repository'yi klonlayın**
+   ```bash
+   git clone https://github.com/IEEE-CSLAB/ieee-web-site-front.git
+   cd ieee-web-site-front
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Bağımlılıkları yükleyin**
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. **Çevre Değişkenlerini Ayarlayın**
+   Ana dizinde `.env.local` dosyası oluşturun ve API adresini tanımlayın:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:5001/api
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Geliştirme Sunucusunu Başlatın**
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. **Tarayıcıda Görüntüleyin**
+   [http://localhost:3000](http://localhost:3000) adresine gidin.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📡 Backend Entegrasyonu
 
-## Deploy on Vercel
+Bu proje, verileri çekmek için **IEEE Web Site Backend** projesine ihtiyaç duyar. Backend projesinin [README](https://github.com/IEEE-CSLAB/ieee-web-site-backend) dosyasındaki kurulum adımlarını takip ederek API'yi ayağa kaldırın.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Bu proje **IEEE CSLAB** organizasyonu altındadır.

@@ -42,25 +42,25 @@ const EventsPage = ({ events }: EventsPageProps) => {
             rawImage && rawImage.startsWith('http')
                 ? rawImage
                 : rawImage
-                ? `${API_URL}${rawImage}`
-                : undefined;
+                    ? `${API_URL}${rawImage}`
+                    : undefined;
 
         const startDate = event.startDate ? new Date(event.startDate) : null;
         const date = startDate
             ? startDate.toLocaleDateString('tr-TR', {
-                  day: '2-digit',
-                  month: 'short',
-                  year: 'numeric',
-              })
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+            })
             : event.date;
 
         const tag =
             event.isImportant
                 ? 'Önemli'
                 : event.tag ||
-                  (Array.isArray((event as any).committees) &&
-                      (event as any).committees[0]?.name) ||
-                  'Etkinlik';
+                (Array.isArray((event as any).committees) &&
+                    (event as any).committees[0]?.name) ||
+                'Etkinlik';
 
         const location = event.location ?? undefined;
         const description = (event.description as string | null) ?? '';
@@ -72,6 +72,7 @@ const EventsPage = ({ events }: EventsPageProps) => {
             tag,
             location,
             description,
+            link: `/events/${event.id}`,
         };
     });
 
@@ -94,7 +95,7 @@ const EventsPage = ({ events }: EventsPageProps) => {
             'Ocak': 0, 'Şubat': 1, 'Mart': 2, 'Nisan': 3, 'Mayıs': 4, 'Haziran': 5,
             'Temmuz': 6, 'Ağustos': 7, 'Eylül': 8, 'Ekim': 9, 'Kasım': 10, 'Aralık': 11
         };
-        
+
         // Handle date ranges like "22-24 Mart 2024"
         const datePart = dateStr.split(' ')[0];
         const day = parseInt(datePart.split('-')[0]);
