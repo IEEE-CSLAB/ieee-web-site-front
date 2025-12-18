@@ -49,7 +49,7 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
             'Ocak': 0, 'Şubat': 1, 'Mart': 2, 'Nisan': 3, 'Mayıs': 4, 'Haziran': 5,
             'Temmuz': 6, 'Ağustos': 7, 'Eylül': 8, 'Ekim': 9, 'Kasım': 10, 'Aralık': 11
         };
-        
+
         const parts = dateStr.split(' ');
         if (parts.length >= 3) {
             const day = parseInt(parts[0]);
@@ -60,10 +60,13 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
         return new Date(0);
     };
 
-    // Add link to each blog and sort by date (newest first)
     const blogsWithLinks = blogs
         .map(blog => ({
             ...blog,
+            description: blog.description ?? '',
+            category: blog.category ?? 'Genel',
+            image: blog.image ?? '',
+            date: blog.date ?? '',
             link: `/blog/${blog.id}`
         }))
         .sort((a, b) => {

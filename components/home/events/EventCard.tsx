@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 
+import Link from 'next/link';
+
 interface EventCardProps {
     title: string;
     description?: string;
@@ -17,7 +19,7 @@ const EventCard = ({ title, description, tag, image, date, location, className =
     const [imageError, setImageError] = useState(false);
 
     return (
-        <a href={link} className={`group flex flex-col rounded-[2rem] overflow-hidden cursor-pointer bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 min-h-[450px] ${className}`}>
+        <Link href={link} className={`group flex flex-col rounded-[2rem] overflow-hidden cursor-pointer bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 min-h-[450px] ${className}`}>
             {/* Image Section - Top */}
             <div className="relative h-[240px] overflow-hidden bg-[#e2e8f0]">
                 {image && !imageError && (
@@ -28,7 +30,7 @@ const EventCard = ({ title, description, tag, image, date, location, className =
                         onError={() => setImageError(true)}
                     />
                 )}
-                
+
                 {/* Tag - Top Right */}
                 {tag && (
                     <div className="absolute top-4 right-4 z-10">
@@ -65,11 +67,11 @@ const EventCard = ({ title, description, tag, image, date, location, className =
                         )}
                     </div>
                 )}
-                
+
                 <h3 className="text-2xl font-semibold text-gray-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors">
                     {title}
                 </h3>
-                
+
                 <p className="text-gray-600 text-base line-clamp-2 mb-4 flex-1">
                     {description}
                 </p>
@@ -84,7 +86,7 @@ const EventCard = ({ title, description, tag, image, date, location, className =
                     </button>
                 </div>
             </div>
-        </a>
+        </Link>
     );
 };
 

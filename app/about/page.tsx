@@ -13,3 +13,6 @@ export default async function About() {
     return <AboutPage committees={committees} />;
 }
 
+
+
+
