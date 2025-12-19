@@ -10,6 +10,8 @@ import {
   AdminCommitteeInput,
 } from "@/lib/services/adminCommitteesApi";
 import { API_URL } from "@/lib/api";
+import { useToast } from "@/components/admin/ToastContext";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 
 interface CommitteeRow {
   id: number;
@@ -33,6 +35,12 @@ export default function AdminCommittees() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
 
+  const { showToast } = useToast();
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    committeeId: number | null;
+  }>({ isOpen: false, committeeId: null });
+
   const fetchAll = async () => {
     try {
       const data = await adminFetchCommittees();
@@ -41,8 +49,8 @@ export default function AdminCommittees() {
         const logoUrl = logoRaw && logoRaw.startsWith('http')
           ? logoRaw
           : logoRaw
-          ? `${API_URL}${logoRaw}`
-          : undefined;
+            ? `${API_URL}${logoRaw}`
+            : undefined;
 
         return {
           id: c.id,
@@ -91,18 +99,28 @@ export default function AdminCommittees() {
       setEditingId(null);
       setCurrentCommittee(emptyForm);
       setLogoFile(null);
+      showToast(`Komite başarıyla ${editingId ? "güncellendi" : "oluşturuldu"}`, "success");
     } catch (err) {
       console.error("Failed to save committee", err);
+      showToast("Komite kaydedilirken bir hata oluştu", "error");
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Bu komiteyi silmek istediğinize emin misiniz?")) return;
+  const handleDeleteClick = (id: number) => {
+    setConfirmModal({ isOpen: true, committeeId: id });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmModal.committeeId) return;
     try {
-      await adminDeleteCommittee(id);
+      await adminDeleteCommittee(confirmModal.committeeId);
+      showToast("Komite başarıyla silindi", "success");
       await fetchAll();
     } catch (err) {
       console.error("Failed to delete committee", err);
+      showToast("Komite silinirken bir hata oluştu", "error");
+    } finally {
+      setConfirmModal({ isOpen: false, committeeId: null });
     }
   };
 
@@ -111,7 +129,7 @@ export default function AdminCommittees() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Komite Yönetimi</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Komite Yönetimi</h1>
         <button
           onClick={() => {
             setEditingId(null);
@@ -119,7 +137,7 @@ export default function AdminCommittees() {
             setLogoFile(null);
             setIsEditing(true);
           }}
-          className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+          className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
         >
           Yeni Komite Ekle
         </button>
@@ -129,10 +147,10 @@ export default function AdminCommittees() {
         {committees.map((committee) => (
           <div
             key={committee.id}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col justify-between"
+            className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 flex flex-col justify-between transition-colors"
           >
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-lg font-bold text-gray-700">
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-lg font-bold text-gray-700 dark:text-slate-300">
                 {committee.logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -149,12 +167,12 @@ export default function AdminCommittees() {
                 )}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   {committee.name}
                 </h3>
               </div>
             </div>
-            <p className="text-gray-600 mb-4 line-clamp-3">
+            <p className="text-gray-600 dark:text-slate-400 mb-4 line-clamp-3">
               {committee.description}
             </p>
             <div className="flex justify-end gap-3 mt-4">
@@ -169,13 +187,13 @@ export default function AdminCommittees() {
                   setLogoFile(null);
                   setIsEditing(true);
                 }}
-                className="px-4 py-2 text-sm text-blue-600 hover:text-blue-800"
+                className="px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
               >
                 Düzenle
               </button>
               <button
-                onClick={() => handleDelete(committee.id)}
-                className="px-4 py-2 text-sm text-red-600 hover:text-red-800"
+                onClick={() => handleDeleteClick(committee.id)}
+                className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
               >
                 Sil
               </button>
@@ -186,19 +204,19 @@ export default function AdminCommittees() {
 
       {isEditing && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto transition-colors">
+            <h2 className="text-xl font-bold mb-4 dark:text-white">
               {editingId ? "Komiteyi Düzenle" : "Yeni Komite"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                   Komite Adı
                 </label>
                 <input
                   type="text"
                   required
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500 text-black"
+                  className="mt-1 block w-full rounded-md border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500 text-black dark:text-white dark:bg-slate-900 transition-colors"
                   value={currentCommittee.name}
                   onChange={(e) =>
                     setCurrentCommittee({
@@ -209,13 +227,13 @@ export default function AdminCommittees() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                   Açıklama
                 </label>
                 <textarea
                   required
                   rows={4}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500 text-black"
+                  className="mt-1 block w-full rounded-md border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500 text-black dark:text-white dark:bg-slate-900 transition-colors"
                   value={currentCommittee.description}
                   onChange={(e) =>
                     setCurrentCommittee({
@@ -226,18 +244,18 @@ export default function AdminCommittees() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                   Logo (opsiyonel)
                 </label>
                 <input
                   type="file"
                   accept="image/*"
-                  className="mt-1 block w-full text-sm text-gray-700"
+                  className="mt-1 block w-full text-sm text-gray-700 dark:text-slate-300"
                   onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
                 />
                 {currentCommittee.logoUrl && !logoFile && (
-                  <p className="mt-2 text-xs text-gray-500">
-                    Mevcut logo: <a href={currentCommittee.logoUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{currentCommittee.logoUrl}</a>
+                  <p className="mt-2 text-xs text-gray-500 dark:text-slate-400">
+                    Mevcut logo: <a href={currentCommittee.logoUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">{currentCommittee.logoUrl}</a>
                   </p>
                 )}
               </div>
@@ -250,13 +268,13 @@ export default function AdminCommittees() {
                     setCurrentCommittee(emptyForm);
                     setLogoFile(null);
                   }}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                  className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                 >
                   İptal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
                   Kaydet
                 </button>
@@ -265,6 +283,17 @@ export default function AdminCommittees() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title="Komiteyi Sil"
+        message="Bu komiteyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmModal({ isOpen: false, committeeId: null })}
+        confirmText="Evet, Sil"
+        cancelText="Vazgeç"
+        type="danger"
+      />
     </div>
   );
 }

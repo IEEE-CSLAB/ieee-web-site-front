@@ -11,6 +11,8 @@ import {
     adminUploadEventCover,
 } from '@/lib/services/adminEventsApi';
 import { fetchCommittees } from '@/lib/services/committeesApi';
+import { useToast } from "@/components/admin/ToastContext";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 
 interface AdminEventRow {
     id: number;
@@ -54,6 +56,12 @@ export default function AdminEvents() {
     const [currentEvent, setCurrentEvent] = useState<EventFormState>(emptyForm);
     const [committees, setCommittees] = useState<{ id: number; name: string }[]>([]);
 
+    const { showToast } = useToast();
+    const [confirmModal, setConfirmModal] = useState<{
+        isOpen: boolean;
+        eventId: number | null;
+    }>({ isOpen: false, eventId: null });
+
     const toDateDisplay = (iso: string) => {
         const d = new Date(iso);
         if (Number.isNaN(d.getTime())) return '';
@@ -80,8 +88,8 @@ export default function AdminEvents() {
                     imageRaw && imageRaw.startsWith('http')
                         ? imageRaw
                         : imageRaw
-                        ? `${API_URL}${imageRaw}`
-                        : undefined;
+                            ? `${API_URL}${imageRaw}`
+                            : undefined;
 
                 const committee = Array.isArray(e.committees) && e.committees.length > 0
                     ? e.committees[0]
@@ -160,19 +168,29 @@ export default function AdminEvents() {
             await fetchEvents();
             setIsEditing(false);
             setCurrentEvent(emptyForm);
+            showToast(`Etkinlik başarıyla ${currentEvent.id ? "güncellendi" : "oluşturuldu"}`, "success");
         } catch (error) {
             console.error('Failed to save event', error);
+            showToast("Etkinlik kaydedilirken bir hata oluştu", "error");
         }
     };
 
-    const handleDelete = async (id: number) => {
-        if (!confirm('Bu etkinliği silmek istediğinize emin misiniz?')) return;
+    const handleDeleteClick = (id: number) => {
+        setConfirmModal({ isOpen: true, eventId: id });
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!confirmModal.eventId) return;
 
         try {
-            await adminDeleteEvent(id);
+            await adminDeleteEvent(confirmModal.eventId);
+            showToast("Etkinlik başarıyla silindi", "success");
             await fetchEvents();
         } catch (error) {
             console.error('Failed to delete event', error);
+            showToast("Etkinlik silinirken bir hata oluştu", "error");
+        } finally {
+            setConfirmModal({ isOpen: false, eventId: null });
         }
     };
 
@@ -181,10 +199,10 @@ export default function AdminEvents() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">Etkinlik Yönetimi</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Etkinlik Yönetimi</h1>
                 <button
                     onClick={() => { setIsEditing(true); setCurrentEvent(emptyForm); }}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                     Yeni Etkinlik Ekle
                 </button>
@@ -192,45 +210,45 @@ export default function AdminEvents() {
 
             {isEditing && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                        <h2 className="text-xl font-bold mb-4">{currentEvent.id ? 'Etkinliği Düzenle' : 'Yeni Etkinlik'}</h2>
+                    <div className="bg-white dark:bg-slate-800 p-6 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-colors">
+                        <h2 className="text-xl font-bold mb-4 dark:text-white">{currentEvent.id ? 'Etkinliği Düzenle' : 'Yeni Etkinlik'}</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Başlık</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Başlık</label>
                                 <input
                                     type="text"
                                     required
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                     value={currentEvent.title}
                                     onChange={e => setCurrentEvent({ ...currentEvent, title: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Açıklama</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Açıklama</label>
                                 <textarea
                                     required
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                     value={currentEvent.description}
                                     onChange={e => setCurrentEvent({ ...currentEvent, description: e.target.value })}
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Başlangıç</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Başlangıç</label>
                                     <input
                                         type="datetime-local"
                                         required
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                         value={currentEvent.startDate}
                                         onChange={e => setCurrentEvent({ ...currentEvent, startDate: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Bitiş</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Bitiş</label>
                                     <input
                                         type="datetime-local"
                                         required
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                         value={currentEvent.endDate}
                                         onChange={e => setCurrentEvent({ ...currentEvent, endDate: e.target.value })}
                                     />
@@ -238,17 +256,17 @@ export default function AdminEvents() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Konum</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Konum</label>
                                     <input
                                         type="text"
                                         required
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                         value={currentEvent.location}
                                         onChange={e => setCurrentEvent({ ...currentEvent, location: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <span className="block text-sm font-medium text-gray-700 mb-1">
+                                    <span className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                                         Önemli Etkinlik
                                     </span>
                                     <div className="flex items-center gap-2 mt-1">
@@ -258,7 +276,7 @@ export default function AdminEvents() {
                                             checked={currentEvent.isImportant}
                                             onChange={e => setCurrentEvent({ ...currentEvent, isImportant: e.target.checked })}
                                         />
-                                        <label htmlFor="isImportant" className="text-sm text-gray-700">
+                                        <label htmlFor="isImportant" className="text-sm text-gray-700 dark:text-slate-300">
                                             Anasayfada öne çıkar
                                         </label>
                                     </div>
@@ -266,11 +284,11 @@ export default function AdminEvents() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                                         Komite
                                     </label>
                                     <select
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                         value={
                                             currentEvent.committeeId ??
                                             committees[0]?.id ??
@@ -291,13 +309,13 @@ export default function AdminEvents() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                                         Kapak Görseli
                                     </label>
                                     <input
                                         type="file"
                                         accept="image/*"
-                                        className="mt-1 block w-full text-sm text-gray-700"
+                                        className="mt-1 block w-full text-sm text-gray-700 dark:text-slate-300"
                                         onChange={e =>
                                             setCurrentEvent({
                                                 ...currentEvent,
@@ -311,13 +329,13 @@ export default function AdminEvents() {
                                 <button
                                     type="button"
                                     onClick={() => setIsEditing(false)}
-                                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                                    className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                                 >
                                     İptal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                 >
                                     Kaydet
                                 </button>
@@ -327,17 +345,17 @@ export default function AdminEvents() {
                 </div>
             )}
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                    <thead className="bg-gray-50 dark:bg-slate-900/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Etkinlik</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durum</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Etkinlik</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Tarih</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Durum</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">İşlemler</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700 transition-colors">
                         {events.map((event) => (
                             <tr key={event.id}>
                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -346,18 +364,18 @@ export default function AdminEvents() {
                                             <img className="h-10 w-10 rounded-full object-cover" src={event.image} alt="" />
                                         </div>
                                         <div className="ml-4">
-                                            <div className="text-sm font-medium text-gray-900">{event.title}</div>
-                                            <div className="text-sm text-gray-500">{event.tag}</div>
+                                            <div className="text-sm font-medium text-gray-900 dark:text-white">{event.title}</div>
+                                            <div className="text-sm text-gray-500 dark:text-slate-400">{event.tag}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">{event.date}</div>
-                                    <div className="text-sm text-gray-500">{event.location}</div>
+                                    <div className="text-sm text-gray-900 dark:text-white">{event.date}</div>
+                                    <div className="text-sm text-gray-500 dark:text-slate-400">{event.location}</div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     {event.isImportant && (
-                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
                                             Önemli
                                         </span>
                                     )}
@@ -376,13 +394,13 @@ export default function AdminEvents() {
                                             });
                                             setIsEditing(true);
                                         }}
-                                        className="text-blue-600 hover:text-blue-900 mr-4"
+                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4"
                                     >
                                         Düzenle
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(event.id)}
-                                        className="text-red-600 hover:text-red-900"
+                                        onClick={() => handleDeleteClick(event.id)}
+                                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                                     >
                                         Sil
                                     </button>
@@ -392,6 +410,17 @@ export default function AdminEvents() {
                     </tbody>
                 </table>
             </div>
+
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                title="Etkinliği Sil"
+                message="Bu etkinliği silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setConfirmModal({ isOpen: false, eventId: null })}
+                confirmText="Evet, Sil"
+                cancelText="Vazgeç"
+                type="danger"
+            />
         </div>
     );
 }

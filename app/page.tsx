@@ -1,12 +1,15 @@
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
+
+export const dynamic = 'force-dynamic';
+
 import Hero from "@/components/home/hero/Hero";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
 import LocationsWrapper from "@/components/home/locations/LocationsWrapper";
 
-const EventsSection = dynamic(() => import("@/components/home/events/EventsSection"));
-const BlogSection = dynamic(() => import("@/components/home/blog/BlogSection"));
-const CommitteesSection = dynamic(() => import("@/components/home/committees/CommitteesSection"));
+const EventsSection = nextDynamic(() => import("@/components/home/events/EventsSection"));
+const BlogSection = nextDynamic(() => import("@/components/home/blog/BlogSection"));
+const CommitteesSection = nextDynamic(() => import("@/components/home/committees/CommitteesSection"));
 
 export default function Home() {
   return (

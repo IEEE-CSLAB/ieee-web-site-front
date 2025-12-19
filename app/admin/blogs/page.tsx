@@ -11,6 +11,8 @@ import {
     AdminBlogInput,
 } from '@/lib/services/adminBlogsApi';
 import { fetchCommittees } from '@/lib/services/committeesApi';
+import { useToast } from "@/components/admin/ToastContext";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 
 interface BlogRow {
     id: number;
@@ -31,6 +33,12 @@ export default function AdminBlogs() {
     const [currentBlog, setCurrentBlog] = useState<Partial<BlogRow>>({});
     const [coverFile, setCoverFile] = useState<File | null>(null);
     const [committees, setCommittees] = useState<{ id: number; name: string }[]>([]);
+
+    const { showToast } = useToast();
+    const [confirmModal, setConfirmModal] = useState<{
+        isOpen: boolean;
+        blogId: number | null;
+    }>({ isOpen: false, blogId: null });
 
     const fetchBlogs = async () => {
         try {
@@ -172,19 +180,29 @@ export default function AdminBlogs() {
             setIsEditing(false);
             setCurrentBlog({});
             setCoverFile(null);
+            showToast(`Blog yazısı başarıyla ${currentBlog.id ? "güncellendi" : "oluşturuldu"}`, "success");
         } catch (error) {
             console.error('Failed to save blog', error);
+            showToast("Blog yazısı kaydedilirken bir hata oluştu", "error");
         }
     };
 
-    const handleDelete = async (id: number) => {
-        if (!confirm('Bu blog yazısını silmek istediğinize emin misiniz?')) return;
+    const handleDeleteClick = (id: number) => {
+        setConfirmModal({ isOpen: true, blogId: id });
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!confirmModal.blogId) return;
 
         try {
-            await adminDeleteBlog(id);
+            await adminDeleteBlog(confirmModal.blogId);
+            showToast("Blog yazısı başarıyla silindi", "success");
             await fetchBlogs();
         } catch (error) {
             console.error('Failed to delete blog', error);
+            showToast("Blog yazısı silinirken bir hata oluştu", "error");
+        } finally {
+            setConfirmModal({ isOpen: false, blogId: null });
         }
     };
 
@@ -193,7 +211,7 @@ export default function AdminBlogs() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">Blog Yönetimi</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Blog Yönetimi</h1>
                 <button
                     onClick={() => { setIsEditing(true); setCurrentBlog({}); setCoverFile(null); }}
                     className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
@@ -204,24 +222,24 @@ export default function AdminBlogs() {
 
             {isEditing && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                        <h2 className="text-xl font-bold mb-4">{currentBlog.id ? 'Yazıyı Düzenle' : 'Yeni Yazı'}</h2>
+                    <div className="bg-white dark:bg-slate-800 p-6 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto transition-colors">
+                        <h2 className="text-xl font-bold mb-4 dark:text-white">{currentBlog.id ? 'Yazıyı Düzenle' : 'Yeni Yazı'}</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Başlık</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Başlık</label>
                                 <input
                                     type="text"
                                     required
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                     value={currentBlog.title || ''}
                                     onChange={e => setCurrentBlog({ ...currentBlog, title: e.target.value })}
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Komite</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Komite</label>
                                     <select
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                         value={
                                             currentBlog.committeeId ??
                                             committees[0]?.id ??
@@ -242,48 +260,48 @@ export default function AdminBlogs() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Tarih</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Tarih</label>
                                     <input
                                         type="text"
                                         required
                                         placeholder="Örn: 15 Mart 2024"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                         value={currentBlog.date || ''}
                                         onChange={e => setCurrentBlog({ ...currentBlog, date: e.target.value })}
                                     />
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Kısa Açıklama</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Kısa Açıklama</label>
                                 <textarea
                                     required
                                     rows={3}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors"
                                     value={currentBlog.description || ''}
                                     onChange={e => setCurrentBlog({ ...currentBlog, description: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">İçerik (Markdown)</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">İçerik (Markdown)</label>
                                 <textarea
                                     required
                                     rows={10}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black font-mono text-sm"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black dark:text-white dark:bg-slate-900 transition-colors font-mono text-sm"
                                     value={currentBlog.content || ''}
                                     onChange={e => setCurrentBlog({ ...currentBlog, content: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Kapak Görseli</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Kapak Görseli</label>
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    className="mt-1 block w-full text-sm text-gray-700"
+                                    className="mt-1 block w-full text-sm text-gray-700 dark:text-slate-300"
                                     onChange={e => setCoverFile(e.target.files?.[0] || null)}
                                 />
                                 {currentBlog.image && !coverFile && (
-                                    <p className="mt-2 text-xs text-gray-500">
-                                        Mevcut görsel: <a href={currentBlog.image} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{currentBlog.image}</a>
+                                    <p className="mt-2 text-xs text-gray-500 dark:text-slate-400">
+                                        Mevcut görsel: <a href={currentBlog.image} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">{currentBlog.image}</a>
                                     </p>
                                 )}
                             </div>
@@ -294,13 +312,13 @@ export default function AdminBlogs() {
                                     checked={currentBlog.isImportant || false}
                                     onChange={e => setCurrentBlog({ ...currentBlog, isImportant: e.target.checked })}
                                 />
-                                <label htmlFor="isImportant" className="text-sm font-medium text-gray-700">Önemli Yazı (Öne çıkar)</label>
+                                <label htmlFor="isImportant" className="text-sm font-medium text-gray-700 dark:text-slate-300">Önemli Yazı (Öne çıkar)</label>
                             </div>
                             <div className="flex justify-end gap-3 mt-6">
                                 <button
                                     type="button"
                                     onClick={() => { setIsEditing(false); setCurrentBlog({}); setCoverFile(null); }}
-                                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                                    className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                                 >
                                     İptal
                                 </button>
@@ -316,17 +334,17 @@ export default function AdminBlogs() {
                 </div>
             )}
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                    <thead className="bg-gray-50 dark:bg-slate-900/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blog Yazısı</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Komite</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Blog Yazısı</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Komite</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Tarih</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">İşlemler</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700 transition-colors">
                         {blogs.map((blog) => (
                             <tr key={blog.id}>
                                 <td className="px-6 py-4">
@@ -335,13 +353,13 @@ export default function AdminBlogs() {
                                             <img className="h-10 w-10 rounded-full object-cover" src={blog.image} alt="" />
                                         </div>
                                         <div className="ml-4">
-                                            <div className="text-sm font-medium text-gray-900 line-clamp-1">{blog.title}</div>
-                                            <div className="text-sm text-gray-500 line-clamp-1">{blog.description}</div>
+                                            <div className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">{blog.title}</div>
+                                            <div className="text-sm text-gray-500 dark:text-slate-400 line-clamp-1">{blog.description}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                                         {
                                             committees.find(
                                                 c => c.id === blog.committeeId
@@ -349,19 +367,19 @@ export default function AdminBlogs() {
                                         }
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                                     {blog.date}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <button
                                         onClick={() => { setCurrentBlog(blog); setCoverFile(null); setIsEditing(true); }}
-                                        className="text-blue-600 hover:text-blue-900 mr-4"
+                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4"
                                     >
                                         Düzenle
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(blog.id)}
-                                        className="text-red-600 hover:text-red-900"
+                                        onClick={() => handleDeleteClick(blog.id)}
+                                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                                     >
                                         Sil
                                     </button>
@@ -371,6 +389,17 @@ export default function AdminBlogs() {
                     </tbody>
                 </table>
             </div>
+
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                title="Blog Yazısını Sil"
+                message="Bu blog yazısını silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setConfirmModal({ isOpen: false, blogId: null })}
+                confirmText="Evet, Sil"
+                cancelText="Vazgeç"
+                type="danger"
+            />
         </div>
     );
 }
