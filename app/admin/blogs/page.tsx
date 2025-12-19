@@ -1,62 +1,173 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '@/lib/api';
+import {
+    adminFetchBlogs,
+    adminCreateBlog,
+    adminUpdateBlog,
+    adminDeleteBlog,
+    adminUploadBlogCover,
+    AdminBlogInput,
+} from '@/lib/services/adminBlogsApi';
+import { fetchCommittees } from '@/lib/services/committeesApi';
 
-interface Blog {
+interface BlogRow {
     id: number;
     title: string;
     description: string;
-    category: string;
     image: string;
     date: string;
     author?: string;
-    isImportant?: boolean;
     content?: string;
+    committeeId: number;
 }
 
 export default function AdminBlogs() {
-    const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [blogs, setBlogs] = useState<BlogRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
-    const [currentBlog, setCurrentBlog] = useState<Partial<Blog>>({});
+    const [currentBlog, setCurrentBlog] = useState<Partial<BlogRow>>({});
+    const [coverFile, setCoverFile] = useState<File | null>(null);
+    const [committees, setCommittees] = useState<{ id: number; name: string }[]>([]);
 
     const fetchBlogs = async () => {
         try {
-            const res = await fetch('/api/blogs');
-            const data = await res.json();
-            setBlogs(data);
+            const data = await adminFetchBlogs();
+            const mapped: BlogRow[] = data.map((b: any) => {
+                const imageRaw: string | undefined = b.coverImageUrl || undefined;
+                const image =
+                    imageRaw && imageRaw.startsWith('http')
+                        ? imageRaw
+                        : imageRaw
+                        ? `${API_URL}${imageRaw}`
+                        : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+
+                const content: string = b.content ?? '';
+                const description =
+                    content.length > 160 ? content.slice(0, 157) + '...' : content;
+
+                const createdAt = b.createdAt ? new Date(b.createdAt) : null;
+                const date = createdAt
+                    ? createdAt.toLocaleDateString('tr-TR', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric',
+                      })
+                    : '';
+
+                return {
+                    id: b.id,
+                    title: b.title,
+                    description,
+                    image,
+                    date,
+                    author: 'IEEE Akdeniz',
+                    content,
+                    committeeId: b.committeeId,
+                };
+            });
+            setBlogs(mapped);
             setLoading(false);
         } catch (error) {
             console.error('Failed to fetch blogs', error);
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchBlogs();
+        const load = async () => {
+            try {
+                const [blogsData, committeesData] = await Promise.all([
+                    adminFetchBlogs(),
+                    fetchCommittees(),
+                ]);
+
+                const committeesMapped = committeesData.map((c: any) => ({
+                    id: c.id,
+                    name: c.name as string,
+                }));
+                setCommittees(committeesMapped);
+
+                const mapped: BlogRow[] = blogsData.map((b: any) => {
+                    const imageRaw: string | undefined = b.coverImageUrl || undefined;
+                    const image =
+                        imageRaw && imageRaw.startsWith('http')
+                            ? imageRaw
+                            : imageRaw
+                            ? `${API_URL}${imageRaw}`
+                            : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+
+                    const content: string = b.content ?? '';
+                    const description =
+                        content.length > 160 ? content.slice(0, 157) + '...' : content;
+
+                    const createdAt = b.createdAt ? new Date(b.createdAt) : null;
+                    const date = createdAt
+                        ? createdAt.toLocaleDateString('tr-TR', {
+                              day: '2-digit',
+                              month: 'long',
+                              year: 'numeric',
+                          })
+                        : '';
+
+                    return {
+                        id: b.id,
+                        title: b.title,
+                        description,
+                        image,
+                        date,
+                        author: 'IEEE Akdeniz',
+                        content,
+                        committeeId: b.committeeId,
+                    };
+                });
+                setBlogs(mapped);
+                setLoading(false);
+            } catch (err) {
+                console.error('Failed to load blogs or committees', err);
+                setLoading(false);
+            }
+        };
+
+        load();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        let updatedBlogs;
-        if (currentBlog.id) {
-            // Update existing
-            updatedBlogs = blogs.map(b => b.id === currentBlog.id ? { ...b, ...currentBlog } as Blog : b);
-        } else {
-            // Add new
-            const newId = Math.max(...blogs.map(b => b.id), 0) + 1;
-            updatedBlogs = [...blogs, { ...currentBlog, id: newId, author: "IEEE Akdeniz" } as Blog];
-        }
-
         try {
-            await fetch('/api/blogs', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedBlogs)
-            });
-            setBlogs(updatedBlogs);
+            const payload: AdminBlogInput = {
+                title: currentBlog.title || '',
+                content:
+                    currentBlog.content ||
+                    currentBlog.description ||
+                    '',
+                coverImageUrl: undefined, // File upload will handle this
+                committeeId:
+                    typeof currentBlog.committeeId === 'number'
+                        ? currentBlog.committeeId
+                        : committees[0]?.id ?? 1,
+            };
+
+            let blogId = currentBlog.id;
+
+            if (currentBlog.id) {
+                await adminUpdateBlog(currentBlog.id, payload);
+            } else {
+                const created = await adminCreateBlog(payload);
+                blogId = created.id;
+            }
+
+            // Upload cover image if file is selected
+            if (blogId && coverFile) {
+                await adminUploadBlogCover(blogId, coverFile);
+            }
+
+            await fetchBlogs();
             setIsEditing(false);
             setCurrentBlog({});
+            setCoverFile(null);
         } catch (error) {
             console.error('Failed to save blog', error);
         }
@@ -65,14 +176,9 @@ export default function AdminBlogs() {
     const handleDelete = async (id: number) => {
         if (!confirm('Bu blog yazısını silmek istediğinize emin misiniz?')) return;
 
-        const updatedBlogs = blogs.filter(b => b.id !== id);
         try {
-            await fetch('/api/blogs', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedBlogs)
-            });
-            setBlogs(updatedBlogs);
+            await adminDeleteBlog(id);
+            await fetchBlogs();
         } catch (error) {
             console.error('Failed to delete blog', error);
         }
@@ -85,7 +191,7 @@ export default function AdminBlogs() {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold text-gray-900">Blog Yönetimi</h1>
                 <button
-                    onClick={() => { setIsEditing(true); setCurrentBlog({}); }}
+                    onClick={() => { setIsEditing(true); setCurrentBlog({}); setCoverFile(null); }}
                     className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
                 >
                     Yeni Yazı Ekle
@@ -109,17 +215,26 @@ export default function AdminBlogs() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Kategori</label>
+                                    <label className="block text-sm font-medium text-gray-700">Komite</label>
                                     <select
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black"
-                                        value={currentBlog.category || 'Teknoloji'}
-                                        onChange={e => setCurrentBlog({ ...currentBlog, category: e.target.value })}
+                                        value={
+                                            currentBlog.committeeId ??
+                                            committees[0]?.id ??
+                                            ''
+                                        }
+                                        onChange={e =>
+                                            setCurrentBlog({
+                                                ...currentBlog,
+                                                committeeId: Number(e.target.value),
+                                            })
+                                        }
                                     >
-                                        <option>Teknoloji</option>
-                                        <option>Mühendislik</option>
-                                        <option>Kariyer</option>
-                                        <option>Etkinlik</option>
-                                        <option>Girişimcilik</option>
+                                        {committees.map(c => (
+                                            <option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div>
@@ -155,14 +270,18 @@ export default function AdminBlogs() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Resim URL</label>
+                                <label className="block text-sm font-medium text-gray-700">Kapak Görseli</label>
                                 <input
-                                    type="text"
-                                    required
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 text-black"
-                                    value={currentBlog.image || ''}
-                                    onChange={e => setCurrentBlog({ ...currentBlog, image: e.target.value })}
+                                    type="file"
+                                    accept="image/*"
+                                    className="mt-1 block w-full text-sm text-gray-700"
+                                    onChange={e => setCoverFile(e.target.files?.[0] || null)}
                                 />
+                                {currentBlog.image && !coverFile && (
+                                    <p className="mt-2 text-xs text-gray-500">
+                                        Mevcut görsel: <a href={currentBlog.image} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{currentBlog.image}</a>
+                                    </p>
+                                )}
                             </div>
                             <div className="flex items-center gap-2">
                                 <input
@@ -176,7 +295,7 @@ export default function AdminBlogs() {
                             <div className="flex justify-end gap-3 mt-6">
                                 <button
                                     type="button"
-                                    onClick={() => setIsEditing(false)}
+                                    onClick={() => { setIsEditing(false); setCurrentBlog({}); setCoverFile(null); }}
                                     className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                                 >
                                     İptal
@@ -198,7 +317,7 @@ export default function AdminBlogs() {
                     <thead className="bg-gray-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blog Yazısı</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Komite</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
                         </tr>
@@ -219,7 +338,11 @@ export default function AdminBlogs() {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        {blog.category}
+                                        {
+                                            committees.find(
+                                                c => c.id === blog.committeeId
+                                            )?.name
+                                        }
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -227,7 +350,7 @@ export default function AdminBlogs() {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <button
-                                        onClick={() => { setCurrentBlog(blog); setIsEditing(true); }}
+                                        onClick={() => { setCurrentBlog(blog); setCoverFile(null); setIsEditing(true); }}
                                         className="text-blue-600 hover:text-blue-900 mr-4"
                                     >
                                         Düzenle

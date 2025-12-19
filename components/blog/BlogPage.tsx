@@ -5,12 +5,13 @@ import NavbarWrapper from '@/components/NavbarWrapper';
 import BlogHeader from './BlogHeader';
 import BlogGrid from './BlogGrid';
 import Footer from '@/components/Footer';
+import { API_URL } from '@/lib/api';
 
 interface Blog {
     id: number;
     title: string;
     description?: string;
-    category?: string;
+    category?: string; // will be committee name
     image?: string;
     date?: string;
     author?: string;
@@ -19,17 +20,23 @@ interface Blog {
     content?: string;
 
     // Backend DTO fields
+    committeeId?: number;
     createdAt?: string;
 }
 
 interface BlogPageProps {
     blogs: Blog[];
+    committees: { id: number; name: string }[];
 }
 
-const BlogPage = ({ blogs }: BlogPageProps) => {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+const BlogPage = ({ blogs, committees }: BlogPageProps) => {
+    const [selectedCommitteeId, setSelectedCommitteeId] = useState<number | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const blogsPerPage = 8;
+
+    const committeeMap = new Map<number, string>(
+        committees.map(c => [c.id, c.name])
+    );
 
     // Helper function to get a usable Date for sorting
     const getBlogDate = (blog: Blog): Date => {
@@ -61,26 +68,57 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
     };
 
     const blogsWithLinks = blogs
-        .map(blog => ({
-            ...blog,
-            description: blog.description ?? '',
-            category: blog.category ?? 'Genel',
-            image: blog.image ?? '',
-            date: blog.date ?? '',
-            link: `/blog/${blog.id}`
-        }))
+        .map(blog => {
+            const committeeId = (blog as any).committeeId as number | undefined;
+            const committeeName = committeeId
+                ? committeeMap.get(committeeId) ?? 'Genel'
+                : 'Genel';
+
+            // Derive description and date from backend fields if possible
+            const content = blog.content ?? '';
+            const description = content.length > 160 ? `${content.slice(0, 157)}...` : content;
+
+            const createdAt = blog.createdAt ? new Date(blog.createdAt) : null;
+            const date = createdAt
+                ? createdAt.toLocaleDateString('tr-TR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                })
+                : blog.date ?? '';
+
+            // Get coverImageUrl from backend DTO (camelCase after JSON serialization)
+            // Backend returns CoverImageUrl with leading / (e.g., "/uploads/blogs/5/cover/xyz.jpg")
+            const coverRaw = (blog as any).coverImageUrl as string | undefined;
+            const image =
+                coverRaw && coverRaw.startsWith('http')
+                    ? coverRaw
+                    : coverRaw
+                    ? `${API_URL}${coverRaw}`
+                    : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+
+            return {
+                ...blog,
+                committeeId,
+                description,
+                category: committeeName,
+                image,
+                date,
+                link: `/blog/${blog.id}`,
+            };
+        })
         .sort((a, b) => {
             const dateA = getBlogDate(a);
             const dateB = getBlogDate(b);
             return dateB.getTime() - dateA.getTime(); // Newest first
         });
 
-    const filteredBlogs = selectedCategory
-        ? blogsWithLinks.filter(blog => blog.category === selectedCategory)
+    const filteredBlogs = selectedCommitteeId
+        ? blogsWithLinks.filter(blog => blog.committeeId === selectedCommitteeId)
         : blogsWithLinks;
 
-    const uniqueCategories = Array.from(
-        new Set(blogsWithLinks.map(blog => blog.category).filter(Boolean) as string[])
+    const uniqueCommittees = committees.filter(c =>
+        blogsWithLinks.some(b => b.committeeId === c.id)
     );
 
     // Pagination logic
@@ -92,7 +130,7 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
     // Reset to page 1 when category changes
     React.useEffect(() => {
         setCurrentPage(1);
-    }, [selectedCategory]);
+    }, [selectedCommitteeId]);
 
     return (
         <div className="min-h-screen bg-white pb-12 pt-24 md:pt-32 relative">
@@ -114,24 +152,24 @@ const BlogPage = ({ blogs }: BlogPageProps) => {
                 {/* Filter Categories */}
                 <div className="mb-6 md:mb-8 flex flex-wrap gap-2 md:gap-3">
                     <button
-                        onClick={() => setSelectedCategory(null)}
-                        className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${selectedCategory === null
+                        onClick={() => setSelectedCommitteeId(null)}
+                        className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${selectedCommitteeId === null
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-card text-foreground border border-border hover:bg-secondary'
                             }`}
                     >
                         Tümü
                     </button>
-                    {uniqueCategories.map((category) => (
+                    {uniqueCommittees.map((committee) => (
                         <button
-                            key={category}
-                            onClick={() => setSelectedCategory(category)}
-                            className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${selectedCategory === category
+                            key={committee.id}
+                            onClick={() => setSelectedCommitteeId(committee.id)}
+                            className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${selectedCommitteeId === committee.id
                                 ? 'bg-primary text-primary-foreground'
                                 : 'bg-card text-foreground border border-border hover:bg-secondary'
                                 }`}
                         >
-                            {category}
+                            {committee.name}
                         </button>
                     ))}
                 </div>

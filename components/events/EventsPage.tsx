@@ -22,14 +22,20 @@ interface Event {
     startDate?: string;
     endDate?: string;
     coverImageUrl?: string;
+    committeeId?: number;
 }
 
 interface EventsPageProps {
     events: Event[];
+    committees: { id: number; name: string }[];
 }
 
-const EventsPage = ({ events }: EventsPageProps) => {
-    const [selectedTag, setSelectedTag] = useState<string | null>(null);
+const EventsPage = ({ events, committees }: EventsPageProps) => {
+    const [selectedCommitteeId, setSelectedCommitteeId] = useState<number | null>(null);
+
+    const committeeMap = new Map<number, string>(
+        committees.map(c => [c.id, c.name])
+    );
 
     // Normalize events with proper image URL (from backend coverImageUrl if available)
     const normalizedEvents = events.map((event) => {
@@ -54,13 +60,15 @@ const EventsPage = ({ events }: EventsPageProps) => {
             })
             : event.date;
 
-        const tag =
-            event.isImportant
-                ? 'Önemli'
-                : event.tag ||
-                (Array.isArray((event as any).committees) &&
-                    (event as any).committees[0]?.name) ||
-                'Etkinlik';
+        const committeesArr = Array.isArray((event as any).committees)
+            ? ((event as any).committees as any[])
+            : [];
+        const committeeId = committeesArr.length > 0 ? committeesArr[0].id as number : undefined;
+        const committeeName = committeeId
+            ? committeeMap.get(committeeId) ?? 'Etkinlik'
+            : 'Etkinlik';
+
+        const tag = committeeName;
 
         const location = event.location ?? undefined;
         const description = (event.description as string | null) ?? '';
@@ -73,6 +81,7 @@ const EventsPage = ({ events }: EventsPageProps) => {
             location,
             description,
             link: `/events/${event.id}`,
+            committeeId,
         };
     });
 
@@ -112,12 +121,12 @@ const EventsPage = ({ events }: EventsPageProps) => {
         return dateB.getTime() - dateA.getTime(); // Newest first
     });
 
-    const filteredEvents = selectedTag
-        ? sortedEvents.filter(event => event.tag === selectedTag)
+    const filteredEvents = selectedCommitteeId
+        ? sortedEvents.filter(event => event.committeeId === selectedCommitteeId)
         : sortedEvents;
 
-    const uniqueTags = Array.from(
-        new Set(normalizedEvents.map(event => event.tag).filter(Boolean) as string[])
+    const uniqueCommittees = committees.filter(c =>
+        normalizedEvents.some(e => e.committeeId === c.id)
     );
 
     return (
@@ -137,27 +146,27 @@ const EventsPage = ({ events }: EventsPageProps) => {
                     </p>
                 </div>
 
-                {/* Filter Tags */}
+                {/* Filter by committee */}
                 <div className="mb-8 flex flex-wrap gap-3">
                     <button
-                        onClick={() => setSelectedTag(null)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedTag === null
+                        onClick={() => setSelectedCommitteeId(null)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCommitteeId === null
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-card text-foreground border border-border hover:bg-secondary'
                             }`}
                     >
                         Tümü
                     </button>
-                    {uniqueTags.map((tag) => (
+                    {uniqueCommittees.map((committee) => (
                         <button
-                            key={tag}
-                            onClick={() => setSelectedTag(tag)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedTag === tag
+                            key={committee.id}
+                            onClick={() => setSelectedCommitteeId(committee.id)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCommitteeId === committee.id
                                 ? 'bg-primary text-primary-foreground'
                                 : 'bg-card text-foreground border border-border hover:bg-secondary'
                                 }`}
                         >
-                            {tag}
+                            {committee.name}
                         </button>
                     ))}
                 </div>

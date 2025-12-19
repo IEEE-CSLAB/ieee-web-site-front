@@ -1,27 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "Teknoloji Zirvesi 2024",
-    "description": "Sektörün öncü isimleriyle buluşun, en yeni teknolojileri keşfedin ve ağınızı genişletin.",
-    "tag": "Konferans",
-    "image": "https://devfest.istanbul/uploads/logo_3e34c1353d.png",
-    "date": "15 Mart 2024",
-    "location": "Akdeniz Üniversitesi",
-    "link": "/events",
-    "isImportant": true
-  },
-  {
-    "id": 2,
-    "title": "Yapay Zeka Hackathonu",
-    "description": "48 saat sürecek kodlama maratonunda yeteneklerinizi sergileyin ve ödüller kazanın.",
-    "tag": "Yarışma",
-    "image": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    "date": "22-24 Mart 2024",
-    "location": "Online",
-    "link": "/events",
-    "isImportant": false
-  },
-  {
     "id": 3,
     "title": "Kariyer Günleri",
     "description": "Staj ve iş imkanları için şirketlerle birebir görüşme fırsatını kaçırmayın.",
