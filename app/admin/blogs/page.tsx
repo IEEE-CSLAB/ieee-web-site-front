@@ -21,6 +21,7 @@ interface BlogRow {
     author?: string;
     content?: string;
     committeeId: number;
+    isImportant?: boolean;
 }
 
 export default function AdminBlogs() {
@@ -40,8 +41,8 @@ export default function AdminBlogs() {
                     imageRaw && imageRaw.startsWith('http')
                         ? imageRaw
                         : imageRaw
-                        ? `${API_URL}${imageRaw}`
-                        : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+                            ? `${API_URL}${imageRaw}`
+                            : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
 
                 const content: string = b.content ?? '';
                 const description =
@@ -50,10 +51,10 @@ export default function AdminBlogs() {
                 const createdAt = b.createdAt ? new Date(b.createdAt) : null;
                 const date = createdAt
                     ? createdAt.toLocaleDateString('tr-TR', {
-                          day: '2-digit',
-                          month: 'long',
-                          year: 'numeric',
-                      })
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                    })
                     : '';
 
                 return {
@@ -65,6 +66,7 @@ export default function AdminBlogs() {
                     author: 'IEEE Akdeniz',
                     content,
                     committeeId: b.committeeId,
+                    isImportant: b.isImportant,
                 };
             });
             setBlogs(mapped);
@@ -95,8 +97,8 @@ export default function AdminBlogs() {
                         imageRaw && imageRaw.startsWith('http')
                             ? imageRaw
                             : imageRaw
-                            ? `${API_URL}${imageRaw}`
-                            : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+                                ? `${API_URL}${imageRaw}`
+                                : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
 
                     const content: string = b.content ?? '';
                     const description =
@@ -105,10 +107,10 @@ export default function AdminBlogs() {
                     const createdAt = b.createdAt ? new Date(b.createdAt) : null;
                     const date = createdAt
                         ? createdAt.toLocaleDateString('tr-TR', {
-                              day: '2-digit',
-                              month: 'long',
-                              year: 'numeric',
-                          })
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric',
+                        })
                         : '';
 
                     return {
@@ -120,6 +122,7 @@ export default function AdminBlogs() {
                         author: 'IEEE Akdeniz',
                         content,
                         committeeId: b.committeeId,
+                        isImportant: b.isImportant,
                     };
                 });
                 setBlogs(mapped);
@@ -148,6 +151,7 @@ export default function AdminBlogs() {
                     typeof currentBlog.committeeId === 'number'
                         ? currentBlog.committeeId
                         : committees[0]?.id ?? 1,
+                isImportant: currentBlog.isImportant,
             };
 
             let blogId = currentBlog.id;

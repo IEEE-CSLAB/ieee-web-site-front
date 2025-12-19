@@ -32,6 +32,7 @@ export interface AdminBlogInput {
   content: string;
   coverImageUrl?: string;
   committeeId: number;
+  isImportant?: boolean;
 }
 
 export async function adminCreateBlog(input: AdminBlogInput) {
