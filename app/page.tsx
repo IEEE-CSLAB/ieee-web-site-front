@@ -2,12 +2,7 @@ import dynamic from 'next/dynamic';
 import Hero from "@/components/home/hero/Hero";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
-
-// Dynamically import heavy components
-const LocationsGlobe = dynamic(() => import("@/components/home/locations/LocationsGlobe"), {
-  ssr: false,
-  loading: () => <div className="w-full h-screen bg-white" />
-});
+import LocationsWrapper from "@/components/home/locations/LocationsWrapper";
 
 const EventsSection = dynamic(() => import("@/components/home/events/EventsSection"));
 const BlogSection = dynamic(() => import("@/components/home/blog/BlogSection"));
@@ -21,7 +16,7 @@ export default function Home() {
         <Hero />
       </section>
       <section className="w-full bg-white">
-        <LocationsGlobe />
+        <LocationsWrapper />
       </section>
       <section className="w-full bg-white">
         <EventsSection />
