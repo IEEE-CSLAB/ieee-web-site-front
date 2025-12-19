@@ -1,47 +1,83 @@
-import { notFound } from 'next/navigation';
-import NavbarWrapper from '@/components/NavbarWrapper';
-import BlogDetail from '@/components/blog/BlogDetail';
-import Footer from '@/components/Footer';
-import fs from 'fs/promises';
-import path from 'path';
-
-async function getBlogById(id: number) {
-    try {
-        const filePath = path.join(process.cwd(), 'data', 'blogs.json');
-        const fileContent = await fs.readFile(filePath, 'utf-8');
-        const blogs = JSON.parse(fileContent);
-        return blogs.find((blog: any) => blog.id === id);
-    } catch (error) {
-        return undefined;
-    }
-}
+import { notFound } from "next/navigation";
+import NavbarWrapper from "@/components/NavbarWrapper";
+import BlogDetail, {
+  BlogDetailViewModel,
+} from "@/components/blog/BlogDetail";
+import Footer from "@/components/Footer";
+import { fetchBlogById } from "@/lib/services/blogsApi";
+import { fetchCommittees } from "@/lib/services/committeesApi";
+import { API_URL } from "@/lib/api";
 
 interface BlogDetailPageProps {
-    params: Promise<{
-        id: string;
-    }>;
+  params: Promise<{
+    id: string;
+  }>;
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
-    const { id } = await params;
-    const blogId = parseInt(id);
-    const blog = await getBlogById(blogId);
+  const { id } = await params;
+  const blogId = Number(id);
+  if (!Number.isFinite(blogId)) {
+    notFound();
+  }
 
-    if (!blog) {
-        notFound();
-    }
+  const [blogDto, committees] = await Promise.all([
+    fetchBlogById(blogId),
+    fetchCommittees(),
+  ]);
 
-    return (
-        <div className="min-h-screen bg-white pb-12 pt-24 md:pt-32 relative">
-            <NavbarWrapper />
+  if (!blogDto) {
+    notFound();
+  }
 
-            {/* Content Box */}
-            <div className="mx-4 md:mx-auto md:max-w-7xl bg-gray-100 rounded-2xl p-4 md:p-12">
-                <BlogDetail blog={blog} />
-            </div>
+  const committee = committees.find(
+    (c: any) => c.id === blogDto.committeeId
+  ) as { id: number; name: string } | undefined;
 
-            {/* Footer */}
-            <Footer />
-        </div>
-    );
+  const imageRaw: string | undefined = blogDto.coverImageUrl || undefined;
+  const image =
+    imageRaw && imageRaw.startsWith("http")
+      ? imageRaw
+      : imageRaw
+      ? `${API_URL}${imageRaw}`
+      : "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80";
+
+  const createdAt = blogDto.createdAt ? new Date(blogDto.createdAt) : null;
+  const date = createdAt
+    ? createdAt.toLocaleDateString("tr-TR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
+  const content: string = blogDto.content ?? "";
+  const description =
+    content.length > 200 ? `${content.slice(0, 197)}...` : content;
+
+  const viewModel: BlogDetailViewModel = {
+    id: blogDto.id,
+    title: blogDto.title,
+    description,
+    category: committee?.name ?? "Genel",
+    image,
+    date,
+    author: "IEEE Akdeniz",
+    isImportant: false,
+    content,
+  };
+
+  return (
+    <div className="min-h-screen bg-white pb-12 pt-24 md:pt-32 relative">
+      <NavbarWrapper />
+
+      {/* Content Box */}
+      <div className="mx-4 md:mx-auto md:max-w-7xl bg-gray-100 rounded-2xl p-4 md:p-12">
+        <BlogDetail blog={viewModel} />
+      </div>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
 }

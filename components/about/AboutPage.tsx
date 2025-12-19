@@ -24,7 +24,7 @@ interface AboutPageProps {
 
 const AboutPage = ({ committees }: AboutPageProps) => {
     return (
-        <main className="h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-white relative">
+        <main className="w-full md:h-screen md:overflow-y-scroll md:snap-y md:snap-mandatory scroll-smooth bg-white relative">
             <NavbarWrapper />
 
             {/* Mission & Vision Section */}

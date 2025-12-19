@@ -35,6 +35,7 @@ export interface AdminEventInput {
   location?: string;
   quota?: number | null;
   isImportant: boolean;
+  committeeIds?: number[];
 }
 
 export interface EventDtoResponse {
@@ -55,7 +56,7 @@ export async function adminCreateEvent(
       location: input.location,
       quota: input.quota,
       isImportant: input.isImportant,
-      committeeIds: null,
+      committeeIds: input.committeeIds ?? null,
     }),
   });
   if (!res.ok) {
@@ -76,7 +77,9 @@ export async function adminUpdateEvent(id: number, input: AdminEventInput) {
       location: input.location,
       quota: input.quota,
       isImportant: input.isImportant,
-      committeeIds: null,
+      // Mevcut etkinliklerde komite ilişkisini EF tarafında güncellemek
+      // karmaşık hata ürettiği için şimdilik update sırasında dokunmuyoruz.
+      // committeeIds: input.committeeIds ?? null,
     }),
   });
   if (!res.ok) {

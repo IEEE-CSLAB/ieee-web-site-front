@@ -10,6 +10,7 @@ import {
     AdminEventInput,
     adminUploadEventCover,
 } from '@/lib/services/adminEventsApi';
+import { fetchCommittees } from '@/lib/services/committeesApi';
 
 interface AdminEventRow {
     id: number;
@@ -20,6 +21,7 @@ interface AdminEventRow {
     isImportant: boolean;
     image?: string;
     tag?: string;
+    committeeId?: number;
 }
 
 interface EventFormState {
@@ -31,6 +33,7 @@ interface EventFormState {
     location: string;
     isImportant: boolean;
     coverFile?: File | null;
+    committeeId?: number;
 }
 
 const emptyForm: EventFormState = {
@@ -41,6 +44,7 @@ const emptyForm: EventFormState = {
     location: '',
     isImportant: false,
     coverFile: null,
+    committeeId: undefined,
 };
 
 export default function AdminEvents() {
@@ -48,6 +52,7 @@ export default function AdminEvents() {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [currentEvent, setCurrentEvent] = useState<EventFormState>(emptyForm);
+    const [committees, setCommittees] = useState<{ id: number; name: string }[]>([]);
 
     const toDateDisplay = (iso: string) => {
         const d = new Date(iso);
@@ -78,6 +83,10 @@ export default function AdminEvents() {
                         ? `${API_URL}${imageRaw}`
                         : undefined;
 
+                const committee = Array.isArray(e.committees) && e.committees.length > 0
+                    ? e.committees[0]
+                    : null;
+
                 return {
                     id: e.id,
                     title: e.title,
@@ -86,7 +95,8 @@ export default function AdminEvents() {
                     location: e.location ?? '',
                     isImportant: e.isImportant,
                     image,
-                    tag: e.isImportant ? 'Önemli' : '',
+                    tag: committee?.name || (e.isImportant ? 'Önemli' : ''),
+                    committeeId: committee?.id,
                 };
             });
             setEvents(mapped);
@@ -98,13 +108,32 @@ export default function AdminEvents() {
     };
 
     useEffect(() => {
-        fetchEvents();
+        const load = async () => {
+            try {
+                const committeeData = await fetchCommittees();
+                setCommittees(
+                    committeeData.map((c: any) => ({
+                        id: c.id,
+                        name: c.name as string,
+                    }))
+                );
+            } catch (err) {
+                console.error('Failed to fetch committees', err);
+            }
+            await fetchEvents();
+        };
+        load();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
+            const selectedCommitteeId =
+                typeof currentEvent.committeeId === 'number'
+                    ? currentEvent.committeeId
+                    : committees[0]?.id;
+
             const payload: AdminEventInput = {
                 title: currentEvent.title,
                 description: currentEvent.description,
@@ -113,6 +142,7 @@ export default function AdminEvents() {
                 location: currentEvent.location,
                 quota: null,
                 isImportant: currentEvent.isImportant,
+                committeeIds: selectedCommitteeId ? [selectedCommitteeId] : undefined,
             };
             let eventId = currentEvent.id;
 
@@ -232,6 +262,33 @@ export default function AdminEvents() {
                                             Anasayfada öne çıkar
                                         </label>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Komite
+                                    </label>
+                                    <select
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-black"
+                                        value={
+                                            currentEvent.committeeId ??
+                                            committees[0]?.id ??
+                                            ''
+                                        }
+                                        onChange={e =>
+                                            setCurrentEvent({
+                                                ...currentEvent,
+                                                committeeId: Number(e.target.value),
+                                            })
+                                        }
+                                    >
+                                        {committees.map(c => (
+                                            <option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">

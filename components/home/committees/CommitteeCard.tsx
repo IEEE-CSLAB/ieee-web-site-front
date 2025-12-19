@@ -2,19 +2,21 @@ import React from 'react';
 
 interface CommitteeCardProps {
     name: string;
-    role: string;
-    image: string;
+    description: string;
+    image?: string;
     className?: string;
 }
 
-const CommitteeCard = ({ name, role, image, className = '' }: CommitteeCardProps) => {
+const CommitteeCard = ({ name, description, image, className = '' }: CommitteeCardProps) => {
     return (
         <div className={`group relative aspect-square w-full rounded-[2rem] overflow-hidden ${className}`}>
             {/* Background Image */}
             <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${image})` }}
+                style={{ backgroundImage: image ? `url(${image})` : undefined }}
             />
+            {/* Fallback background color if no image */}
+            {!image && <div className="absolute inset-0 bg-gray-200" />}
 
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
@@ -37,7 +39,7 @@ const CommitteeCard = ({ name, role, image, className = '' }: CommitteeCardProps
             {/* Bottom Content */}
             <div className="absolute bottom-0 left-0 right-0 p-6 text-center">
                 <h3 className="text-2xl font-semibold text-white mb-1">{name}</h3>
-                <p className="text-white/80 text-sm font-medium uppercase tracking-wider">{role}</p>
+                <p className="text-white/80 text-sm font-medium uppercase tracking-wider line-clamp-2">{description}</p>
             </div>
         </div>
     );

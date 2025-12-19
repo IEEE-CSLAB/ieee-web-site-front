@@ -1,8 +1,19 @@
 import React from 'react';
-import { Blog } from '@/data/blogs';
+
+export interface BlogDetailViewModel {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+    image: string;
+    date: string;
+    author?: string;
+    isImportant?: boolean;
+    content?: string;
+}
 
 interface BlogDetailProps {
-    blog: Blog;
+    blog: BlogDetailViewModel;
 }
 
 const BlogDetail = ({ blog }: BlogDetailProps) => {

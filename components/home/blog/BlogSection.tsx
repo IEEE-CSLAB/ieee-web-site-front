@@ -1,6 +1,7 @@
 import React from "react";
 import BlogCard from "@/components/blog/BlogCard";
 import { fetchBlogs } from "@/lib/services/blogsApi";
+import { API_URL } from "@/lib/api";
 
 const BlogSection = async () => {
   const backendBlogs = await fetchBlogs();
@@ -16,12 +17,21 @@ const BlogSection = async () => {
           })
         : "";
 
+      // Normalize cover image URL (backend returns path with leading /)
+      const imageRaw: string | undefined = blog.coverImageUrl || undefined;
+      const image =
+        imageRaw && imageRaw.startsWith("http")
+          ? imageRaw
+          : imageRaw
+          ? `${API_URL}${imageRaw}`
+          : "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80";
+
       return {
         id: blog.id,
         title: blog.title,
         description: blog.content ?? "",
         category: "Genel",
-        image: blog.coverImageUrl as string | undefined,
+        image,
         date: formattedDate,
       };
     })

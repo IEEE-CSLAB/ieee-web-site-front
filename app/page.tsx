@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+    <main className="w-full md:h-screen md:overflow-y-scroll md:snap-y md:snap-mandatory scroll-smooth">
       <section className="snap-start w-full relative">
         <NavbarWrapper />
         <Hero />
