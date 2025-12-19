@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface EventCardProps {
     title: string;
@@ -23,10 +24,12 @@ const EventCard = ({ title, description, tag, image, date, location, className =
             {/* Image Section - Top */}
             <div className="relative h-[240px] overflow-hidden bg-[#e2e8f0]">
                 {image && !imageError && (
-                    <img
+                    <Image
                         src={image}
                         alt={title}
-                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         onError={() => setImageError(true)}
                     />
                 )}

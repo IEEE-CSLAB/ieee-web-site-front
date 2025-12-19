@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface BlogCardProps {
     title: string;
@@ -18,9 +19,12 @@ const BlogCard = ({ title, description, category, image, date, author, className
             {/* Image Section */}
             <div className="relative flex-shrink-0 w-full md:w-72 h-48 md:h-auto overflow-hidden">
                 {image && (
-                    <div
-                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                        style={{ backgroundImage: `url(${image})` }}
+                    <Image
+                        src={image}
+                        alt={title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, 300px"
                     />
                 )}
                 {/* Important Badge */}
@@ -50,7 +54,7 @@ const BlogCard = ({ title, description, category, image, date, author, className
                             )}
                         </div>
                     </div>
-                    
+
                     <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-3 leading-tight group-hover:text-primary transition-colors">
                         {title}
                     </h3>
