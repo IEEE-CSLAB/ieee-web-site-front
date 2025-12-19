@@ -6,7 +6,13 @@ import { fetchCommittees } from "@/lib/services/committeesApi";
 import { API_URL } from "@/lib/api";
 
 const CommitteesSection = async () => {
-  const backendCommittees = await fetchCommittees();
+  let backendCommittees: any[] = [];
+  try {
+    backendCommittees = await fetchCommittees();
+  } catch (error) {
+    console.warn("Failed to fetch committees:", error);
+    backendCommittees = [];
+  }
 
   const committees = backendCommittees.slice(0, 8).map((committee: any) => {
     // Normalize logo URL (backend may return path with or without leading /)
@@ -16,8 +22,8 @@ const CommitteesSection = async () => {
       logoRaw && logoRaw.startsWith("http")
         ? logoRaw
         : logoRaw
-        ? `${API_URL}${logoRaw.startsWith('/') ? logoRaw : '/' + logoRaw}`
-        : "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80";
+          ? `${API_URL}${logoRaw.startsWith('/') ? logoRaw : '/' + logoRaw}`
+          : "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80";
 
     return {
       name: committee.name,

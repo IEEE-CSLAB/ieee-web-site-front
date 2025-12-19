@@ -6,16 +6,22 @@ import { fetchImportantEvents } from "@/lib/services/eventsApi";
 import { API_URL } from "@/lib/api";
 
 const EventsSection = async () => {
-  const backendEvents = await fetchImportantEvents();
+  let backendEvents: any[] = [];
+  try {
+    backendEvents = await fetchImportantEvents();
+  } catch (error) {
+    console.warn("Failed to fetch events:", error);
+    backendEvents = [];
+  }
 
   const events = backendEvents.slice(0, 4).map((event: any) => {
     const startDate = event.startDate ? new Date(event.startDate) : null;
     const formattedDate = startDate
       ? startDate.toLocaleDateString("tr-TR", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
       : "";
 
     // Normalize cover image URL (backend returns relative path like "/wwwroot/uploads/...")
@@ -24,8 +30,8 @@ const EventsSection = async () => {
       rawImage && rawImage.startsWith("http")
         ? rawImage
         : rawImage
-        ? `${API_URL}${rawImage}`
-        : "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80";
+          ? `${API_URL}${rawImage}`
+          : "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80";
 
     return {
       title: event.title,

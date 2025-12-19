@@ -4,17 +4,23 @@ import { fetchBlogs } from "@/lib/services/blogsApi";
 import { API_URL } from "@/lib/api";
 
 const BlogSection = async () => {
-  const backendBlogs = await fetchBlogs();
+  let backendBlogs: any[] = [];
+  try {
+    backendBlogs = await fetchBlogs();
+  } catch (error) {
+    console.warn("Failed to fetch blogs:", error);
+    backendBlogs = [];
+  }
 
   const blogs = backendBlogs
     .map((blog: any) => {
       const createdAt = blog.createdAt ? new Date(blog.createdAt) : null;
       const formattedDate = createdAt
         ? createdAt.toLocaleDateString("tr-TR", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
         : "";
 
       // Normalize cover image URL (backend returns path with leading /)
@@ -23,8 +29,8 @@ const BlogSection = async () => {
         imageRaw && imageRaw.startsWith("http")
           ? imageRaw
           : imageRaw
-          ? `${API_URL}${imageRaw}`
-          : "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80";
+            ? `${API_URL}${imageRaw}`
+            : "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80";
 
       return {
         id: blog.id,
