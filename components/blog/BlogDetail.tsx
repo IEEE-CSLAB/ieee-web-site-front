@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export interface BlogDetailViewModel {
     id: number;
@@ -26,7 +27,7 @@ const BlogDetail = ({ blog }: BlogDetailProps) => {
                     style={{ backgroundImage: `url(${blog.image})` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                
+
                 {/* Important Badge */}
                 {blog.isImportant && (
                     <div className="absolute top-6 left-6 z-10">
@@ -117,7 +118,7 @@ const BlogDetail = ({ blog }: BlogDetailProps) => {
 
                 {/* Back to Blog Button */}
                 <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-border">
-                    <a
+                    <Link
                         href="/blog"
                         className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-lg bg-primary text-primary-foreground text-sm md:text-base font-medium hover:bg-primary-dark transition-colors"
                     >
@@ -125,8 +126,8 @@ const BlogDetail = ({ blog }: BlogDetailProps) => {
                             <path d="M19 12H5" />
                             <path d="M12 19l-7-7 7-7" />
                         </svg>
-                        Blog'a Dön
-                    </a>
+                        Blog&apos;a Dön
+                    </Link>
                 </div>
             </div>
         </article>
@@ -134,4 +135,3 @@ const BlogDetail = ({ blog }: BlogDetailProps) => {
 };
 
 export default BlogDetail;
-

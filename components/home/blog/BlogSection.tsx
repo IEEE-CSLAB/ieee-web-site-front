@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import BlogCard from "@/components/blog/BlogCard";
 import { fetchBlogs } from "@/lib/services/blogsApi";
 import { API_URL } from "@/lib/api";
@@ -61,12 +62,12 @@ const BlogSection = async () => {
               Son Yazılarımız
             </h2>
           </div>
-          <a
+          <Link
             href="/blog"
             className="px-6 py-3 rounded-full bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 transition-colors"
           >
             Tümünü Gör
-          </a>
+          </Link>
         </div>
 
         {/* Blog Grid */}

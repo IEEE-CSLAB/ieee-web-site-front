@@ -53,7 +53,7 @@ export default function LocationsGlobe() {
         { location: [51.0447, -114.0719], size: 0.05 }, // Calgary, Canada
         { location: [53.5461, -113.4938], size: 0.05 }, // Edmonton, Canada
         { location: [45.4215, -75.6972], size: 0.05 }, // Ottawa, Canada
-        
+
         // Europe
         { location: [51.5074, -0.1278], size: 0.05 }, // London, UK
         { location: [52.4862, -1.8904], size: 0.05 }, // Birmingham, UK
@@ -94,7 +94,7 @@ export default function LocationsGlobe() {
         { location: [42.6977, 23.3219], size: 0.05 }, // Sofia, Bulgaria
         { location: [37.9838, 23.7275], size: 0.05 }, // Athens, Greece
         { location: [38.7223, -9.1393], size: 0.05 }, // Lisbon, Portugal
-        
+
         // Middle East & Africa - Turkey (IEEE Turkey Section - 50+ universities)
         { location: [41.0082, 28.9784], size: 0.05 }, // Istanbul, Turkey (ITU, Boğaziçi, Yıldız, Sabancı, Koç, Bilgi, vb.)
         { location: [39.9334, 32.8597], size: 0.05 }, // Ankara, Turkey (METU, Hacettepe, Bilkent, Ankara Üniversitesi, vb.)
@@ -122,7 +122,7 @@ export default function LocationsGlobe() {
         { location: [36.8000, 34.6333], size: 0.05 }, // Mersin, Turkey
         { location: [41.0082, 39.7200], size: 0.05 }, // Trabzon, Turkey
         { location: [35.2433, 33.0000], size: 0.05 }, // Northern Cyprus (METU NCC)
-        
+
         // Middle East & Africa - Other
         { location: [25.2048, 55.2708], size: 0.05 }, // Dubai, UAE
         { location: [24.4539, 54.3773], size: 0.05 }, // Abu Dhabi, UAE
@@ -140,7 +140,7 @@ export default function LocationsGlobe() {
         { location: [-25.7479, 28.2293], size: 0.05 }, // Pretoria, South Africa
         { location: [1.2921, 36.8219], size: 0.05 }, // Nairobi, Kenya
         { location: [6.5244, 3.3792], size: 0.05 }, // Lagos, Nigeria
-        
+
         // Asia - India (IEEE India Section - 100+ universities)
         { location: [12.9716, 77.5946], size: 0.05 }, // Bangalore, India (IEEE India Office)
         { location: [19.0760, 72.8777], size: 0.05 }, // Mumbai, India
@@ -158,7 +158,7 @@ export default function LocationsGlobe() {
         { location: [22.2587, 71.1924], size: 0.05 }, // Rajkot, India
         { location: [10.7905, 78.7047], size: 0.05 }, // Trichy, India
         { location: [11.0168, 76.9558], size: 0.05 }, // Coimbatore, India
-        
+
         // Asia - China & East Asia
         { location: [39.9042, 116.4074], size: 0.05 }, // Beijing, China (IEEE China Office)
         { location: [22.5431, 114.0579], size: 0.05 }, // Shenzhen, China
@@ -181,7 +181,7 @@ export default function LocationsGlobe() {
         { location: [36.3504, 127.3845], size: 0.05 }, // Daejeon, South Korea
         { location: [25.0330, 121.5654], size: 0.05 }, // Taipei, Taiwan
         { location: [24.1477, 120.6736], size: 0.05 }, // Taichung, Taiwan
-        
+
         // Asia - Southeast Asia & Pacific
         { location: [1.3521, 103.8198], size: 0.05 }, // Singapore (IEEE Asia-Pacific Office)
         { location: [13.7563, 100.5018], size: 0.05 }, // Bangkok, Thailand
@@ -195,7 +195,7 @@ export default function LocationsGlobe() {
         { location: [16.4023, 120.5960], size: 0.05 }, // Baguio, Philippines
         { location: [10.8231, 106.6297], size: 0.05 }, // Ho Chi Minh City, Vietnam
         { location: [21.0285, 105.8542], size: 0.05 }, // Hanoi, Vietnam
-        
+
         // Australia & New Zealand
         { location: [-33.8688, 151.2093], size: 0.05 }, // Sydney, Australia
         { location: [-37.8136, 144.9631], size: 0.05 }, // Melbourne, Australia
@@ -206,7 +206,7 @@ export default function LocationsGlobe() {
         { location: [-36.8485, 174.7633], size: 0.05 }, // Auckland, New Zealand
         { location: [-41.2865, 174.7762], size: 0.05 }, // Wellington, New Zealand
         { location: [-43.5321, 172.6362], size: 0.05 }, // Christchurch, New Zealand
-        
+
         // Latin America
         { location: [19.4326, -99.1332], size: 0.05 }, // Mexico City, Mexico
         { location: [20.6597, -103.3496], size: 0.05 }, // Guadalajara, Mexico
@@ -254,23 +254,23 @@ export default function LocationsGlobe() {
           </h2>
 
           <p className="text-gray-600 text-lg leading-relaxed max-w-lg">
-            Dünyanın en büyük teknik organizasyonunun bir parçası olun. 
-            160'tan fazla ülkede, 400.000'den fazla üye ile teknoloji ve inovasyonun 
+            Dünyanın en büyük teknik organizasyonunun bir parçası olun.
+            160&apos;tan fazla ülkede, 400.000&apos;den fazla üye ile teknoloji ve inovasyonun
             kalbinde yer alın.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
             <div className="p-6 rounded-2xl bg-gray-50 border border-gray-200 hover:bg-gray-100 hover:border-gray-400 transition-colors group">
               <div className="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mb-4 text-gray-900 group-hover:scale-110 transition-transform">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
               </div>
               <h3 className="text-xl font-bold mb-1 text-gray-900">160+ Ülke</h3>
               <p className="text-gray-600 text-sm">Küresel erişim ve işbirliği ağı</p>
             </div>
-            
+
             <div className="p-6 rounded-2xl bg-gray-50 border border-gray-200 hover:bg-gray-100 hover:border-indigo-300 transition-colors group">
               <div className="h-10 w-10 rounded-lg bg-indigo-100 flex items-center justify-center mb-4 text-indigo-600 group-hover:scale-110 transition-transform">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
               </div>
               <h3 className="text-xl font-bold mb-1 text-gray-900">400K+ Üye</h3>
               <p className="text-gray-600 text-sm">Dünyanın en büyük teknik topluluğu</p>
@@ -279,7 +279,7 @@ export default function LocationsGlobe() {
 
           <button className="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg shadow-blue-200">
             Hemen Katıl
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
           </button>
         </div>
 
@@ -288,10 +288,10 @@ export default function LocationsGlobe() {
           {/* Glow effect removed */}
           <canvas
             ref={canvasRef}
-            style={{ 
-              width: 600, 
-              height: 600, 
-              maxWidth: "100%", 
+            style={{
+              width: 600,
+              height: 600,
+              maxWidth: "100%",
               aspectRatio: 1,
               filter: "drop-shadow(0 0 0 transparent)"
             }}

@@ -32,7 +32,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
       if (token) {
         router.replace("/admin");
       } else {
-        setChecked(true);
+        setTimeout(() => setChecked(true), 0);
       }
       return;
     }
@@ -41,7 +41,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
     if (!token) {
       router.replace("/admin/login");
     } else {
-      setChecked(true);
+      setTimeout(() => setChecked(true), 0);
     }
   }, [router, pathname]);
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { API_URL } from '@/lib/api';
 
 interface Event {
@@ -132,7 +133,7 @@ const EventDetail = ({ event }: EventDetailProps) => {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 mt-8 pt-8 border-t border-border">
-                    <a
+                    <Link
                         href="/events"
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-border bg-background hover:bg-secondary text-foreground transition-colors"
                     >
@@ -141,7 +142,7 @@ const EventDetail = ({ event }: EventDetailProps) => {
                             <path d="M12 19l-7-7 7-7" />
                         </svg>
                         Tüm Etkinlikler
-                    </a>
+                    </Link>
 
                     {event.link && (
                         <a
