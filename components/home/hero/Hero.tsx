@@ -30,13 +30,10 @@ const Hero = () => {
                         muted
                         playsInline
                         preload="auto"
-                        poster="/hero-video.gif"
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{ filter: 'brightness(0.85)' }}
                     >
                         <source src="/hero-video.webm" type="video/webm" />
-                        {/* Chrome sometimes works better if we don't specify type for mov or use video/mp4 fallback */}
-                        <source src="/hero-video.mp4" type="video/mp4" />
                     </video>
                     {/* Gradient Overlay for better text readability */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
