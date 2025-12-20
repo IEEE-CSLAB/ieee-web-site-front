@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  reactStrictMode: true,
+  compress: true,
+  poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: ['cobe'],
+  },
 };
 
 export default nextConfig;

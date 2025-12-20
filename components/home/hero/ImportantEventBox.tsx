@@ -1,5 +1,7 @@
 import React from 'react';
 import eventsData from '@/data/events.json';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface Event {
     id: number;
@@ -28,22 +30,22 @@ const ImportantEventBox = () => {
     const event = importantEvents[0];
 
     return (
-        <a
+        <Link
             href={event.link}
             className="hidden md:block absolute top-auto bottom-8 right-8 z-20 w-[calc(100%-2rem)] md:w-full max-w-[280px] md:max-w-xs bg-black/40 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden group hover:bg-black/50 transition-all duration-300 border border-white/10"
             style={{ bottom: '2rem', right: '2rem' }}
         >
             <div className="p-5">
                 {/* Event Image - Resim tam sığacak şekilde */}
-                <div
-                    className="w-full h-32 rounded-2xl overflow-hidden mb-4 bg-transparent"
-                    style={{
-                        backgroundImage: `url(${event.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                    }}
-                />
+                <div className="relative w-full h-32 rounded-2xl overflow-hidden mb-4 bg-transparent">
+                    <Image
+                        src={event.image}
+                        alt={event.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 250px"
+                    />
+                </div>
 
                 {/* Event Info */}
                 <div>
@@ -79,9 +81,8 @@ const ImportantEventBox = () => {
                     </div>
                 </div>
             </div>
-        </a>
+        </Link>
     );
 };
 
 export default ImportantEventBox;
-
