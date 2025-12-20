@@ -45,12 +45,19 @@ export default function AdminBlogs() {
             const data = await adminFetchBlogs();
             const mapped: BlogRow[] = data.map((b: any) => {
                 const imageRaw: string | undefined = b.coverImageUrl || undefined;
-                const image =
-                    imageRaw && imageRaw.startsWith('http')
-                        ? imageRaw
-                        : imageRaw
-                            ? `${API_URL}${imageRaw}`
-                            : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+                let image: string;
+                if (!imageRaw) {
+                    image = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+                } else if (imageRaw.startsWith('http')) {
+                    // Already a full URL
+                    image = imageRaw;
+                } else if (imageRaw.startsWith('/http')) {
+                    // Remove leading slash from full URL (e.g., "/https://...")
+                    image = imageRaw.substring(1);
+                } else {
+                    // Relative path, prepend API_URL
+                    image = `${API_URL}${imageRaw}`;
+                }
 
                 const content: string = b.content ?? '';
                 const description =
@@ -101,12 +108,19 @@ export default function AdminBlogs() {
 
                 const mapped: BlogRow[] = blogsData.map((b: any) => {
                     const imageRaw: string | undefined = b.coverImageUrl || undefined;
-                    const image =
-                        imageRaw && imageRaw.startsWith('http')
-                            ? imageRaw
-                            : imageRaw
-                                ? `${API_URL}${imageRaw}`
-                                : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+                    let image: string;
+                    if (!imageRaw) {
+                        image = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+                    } else if (imageRaw.startsWith('http')) {
+                        // Already a full URL
+                        image = imageRaw;
+                    } else if (imageRaw.startsWith('/http')) {
+                        // Remove leading slash from full URL (e.g., "/https://...")
+                        image = imageRaw.substring(1);
+                    } else {
+                        // Relative path, prepend API_URL
+                        image = `${API_URL}${imageRaw}`;
+                    }
 
                     const content: string = b.content ?? '';
                     const description =

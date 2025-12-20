@@ -67,17 +67,13 @@ const CommitteesPage = ({ committees }: CommitteesPageProps) => {
             {/* Committee Details - All committees in order */}
             <div className="w-full">
                 {committees.map((committee, index) => (
-                    <div
+                    <CommitteeDetails
                         key={committee.name}
-                        id={`committee-details-${committee.name.replace(/\s+/g, '-').toLowerCase()}`}
-                    >
-                        <CommitteeDetails
-                            committeeName={committee.name}
-                            detailText={committee.detailText || ""}
-                            image={committee.detailImage || ""}
-                            isFirst={index === 0}
-                        />
-                    </div>
+                        committeeName={committee.name}
+                        detailText={committee.detailText || ""}
+                        image={committee.detailImage || ""}
+                        isFirst={index === 0}
+                    />
                 ))}
             </div>
 

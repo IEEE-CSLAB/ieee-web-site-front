@@ -30,12 +30,19 @@ const EventDetail = ({ event }: EventDetailProps) => {
         (event.image as string | undefined) ||
         undefined;
 
-    const imageUrl =
-        rawImage && rawImage.startsWith('http')
-            ? rawImage
-            : rawImage
-                ? `${API_URL}${rawImage}`
-                : undefined;
+    let imageUrl: string | undefined;
+    if (!rawImage) {
+        imageUrl = undefined;
+    } else if (rawImage.startsWith('http')) {
+        // Already a full URL
+        imageUrl = rawImage;
+    } else if (rawImage.startsWith('/http')) {
+        // Remove leading slash from full URL (e.g., "/https://...")
+        imageUrl = rawImage.substring(1);
+    } else {
+        // Relative path, prepend API_URL
+        imageUrl = `${API_URL}${rawImage}`;
+    }
 
     const startDate = event.startDate ? new Date(event.startDate) : null;
     const formattedDate = startDate

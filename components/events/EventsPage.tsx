@@ -44,12 +44,19 @@ const EventsPage = ({ events, committees }: EventsPageProps) => {
             (event.image as string | undefined) ||
             undefined;
 
-        const image =
-            rawImage && rawImage.startsWith('http')
-                ? rawImage
-                : rawImage
-                    ? `${API_URL}${rawImage}`
-                    : undefined;
+        let image: string | undefined;
+        if (!rawImage) {
+            image = undefined;
+        } else if (rawImage.startsWith('http')) {
+            // Already a full URL
+            image = rawImage;
+        } else if (rawImage.startsWith('/http')) {
+            // Remove leading slash from full URL (e.g., "/https://...")
+            image = rawImage.substring(1);
+        } else {
+            // Relative path, prepend API_URL
+            image = `${API_URL}${rawImage}`;
+        }
 
         const startDate = event.startDate ? new Date(event.startDate) : null;
         const date = startDate

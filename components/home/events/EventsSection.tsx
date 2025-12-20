@@ -24,14 +24,21 @@ const EventsSection = async () => {
       })
       : "";
 
-    // Normalize cover image URL (backend returns relative path like "/wwwroot/uploads/...")
+    // Normalize cover image URL
     const rawImage = event.coverImageUrl as string | undefined;
-    const image =
-      rawImage && rawImage.startsWith("http")
-        ? rawImage
-        : rawImage
-          ? `${API_URL}${rawImage}`
-          : "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80";
+    let image: string;
+    if (!rawImage) {
+      image = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80";
+    } else if (rawImage.startsWith("http")) {
+      // Already a full URL
+      image = rawImage;
+    } else if (rawImage.startsWith("/http")) {
+      // Remove leading slash from full URL (e.g., "/https://...")
+      image = rawImage.substring(1);
+    } else {
+      // Relative path, prepend API_URL
+      image = `${API_URL}${rawImage}`;
+    }
 
     return {
       title: event.title,
