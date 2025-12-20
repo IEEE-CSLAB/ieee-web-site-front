@@ -14,8 +14,10 @@ interface Event {
 }
 
 const ImportantEventBox = () => {
-    // Önemli etkinlikleri filtrele
-    const importantEvents = (eventsData as Event[]).filter(event => event.isImportant);
+    // Önemli etkinlikleri filtrele - Performans için useMemo kullanıyoruz
+    const importantEvents = React.useMemo(() => {
+        return (eventsData as Event[]).filter(event => event.isImportant);
+    }, []);
 
     // Eğer önemli etkinlik yoksa hiçbir şey gösterme
     if (importantEvents.length === 0) {
@@ -26,14 +28,14 @@ const ImportantEventBox = () => {
     const event = importantEvents[0];
 
     return (
-        <a 
-            href={event.link} 
+        <a
+            href={event.link}
             className="hidden md:block absolute top-auto bottom-8 right-8 z-20 w-[calc(100%-2rem)] md:w-full max-w-[280px] md:max-w-xs bg-black/40 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden group hover:bg-black/50 transition-all duration-300 border border-white/10"
             style={{ bottom: '2rem', right: '2rem' }}
         >
             <div className="p-5">
                 {/* Event Image - Resim tam sığacak şekilde */}
-                <div 
+                <div
                     className="w-full h-32 rounded-2xl overflow-hidden mb-4 bg-transparent"
                     style={{
                         backgroundImage: `url(${event.image})`,
@@ -50,11 +52,11 @@ const ImportantEventBox = () => {
                             {event.tag}
                         </span>
                     </div>
-                    
+
                     <h3 className="text-lg font-bold text-white mb-2 line-clamp-1 tracking-tight">
                         {event.title}
                     </h3>
-                    
+
                     <p className="text-xs text-gray-300 mb-3 line-clamp-2 leading-relaxed font-light">
                         {event.description}
                     </p>
