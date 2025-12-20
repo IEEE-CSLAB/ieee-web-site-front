@@ -1,17 +1,70 @@
 "use client";
 
-import createGlobe from "cobe";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useLayoutEffect } from "react";
 
 export default function LocationsGlobe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const globeRef = useRef<any>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let phi = 0;
+    let mounted = true;
 
-    if (!canvasRef.current) return;
+    const initGlobe = async () => {
+      // Wait for next tick to ensure canvas is in DOM
+      await new Promise(resolve => setTimeout(resolve, 0));
 
-    const globe = createGlobe(canvasRef.current, {
+      if (!mounted) return;
+
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        console.warn("Canvas element not found");
+        return;
+      }
+
+      // Verify canvas is actually in the DOM
+      if (!canvas.isConnected) {
+        console.warn("Canvas is not connected to DOM");
+        return;
+      }
+
+      // Verify canvas has proper dimensions (WebGL requires actual width/height attributes)
+      if (canvas.width === 0 || canvas.height === 0) {
+        // Set canvas dimensions if not set
+        canvas.width = 1200; // 600 * 2
+        canvas.height = 1200; // 600 * 2
+      }
+
+      // Verify canvas is visible (not hidden)
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) {
+        console.warn("Canvas has zero dimensions");
+        return;
+      }
+
+      // Verify WebGL context is available (cobe uses WebGL, not 2D)
+      const gl = canvas.getContext("webgl") || canvas.getContext("webgl2");
+      if (!gl) {
+        console.warn("WebGL context not available");
+        return;
+      }
+
+      try {
+        const cobeModule = await import("cobe");
+        const createGlobe = cobeModule.default || cobeModule;
+        
+        if (!createGlobe || typeof createGlobe !== "function") {
+          console.warn("createGlobe is not a function");
+          return;
+        }
+
+        // Final check - canvas still exists and is connected
+        if (!canvasRef.current || !canvasRef.current.isConnected) {
+          console.warn("Canvas became unavailable");
+          return;
+        }
+
+        globeRef.current = createGlobe(canvasRef.current, {
       devicePixelRatio: 2,
       width: 600 * 2,
       height: 600 * 2,
@@ -231,13 +284,29 @@ export default function LocationsGlobe() {
         { location: [-34.9011, -56.1645], size: 0.05 }, // Montevideo, Uruguay
       ],
       onRender: (state) => {
+        if (!mounted) return;
         state.phi = phi;
         phi += 0.003;
       },
     });
+      } catch (error) {
+        console.error("Failed to create globe:", error);
+        globeRef.current = null;
+      }
+    };
+
+    initGlobe();
 
     return () => {
-      globe.destroy();
+      mounted = false;
+      if (globeRef.current) {
+        try {
+          globeRef.current.destroy();
+          globeRef.current = null;
+        } catch (error) {
+          console.error("Error destroying globe:", error);
+        }
+      }
     };
   }, []);
 
@@ -288,6 +357,8 @@ export default function LocationsGlobe() {
           {/* Glow effect removed */}
           <canvas
             ref={canvasRef}
+            width={1200}
+            height={1200}
             style={{
               width: 600,
               height: 600,

@@ -88,14 +88,20 @@ const BlogPage = ({ blogs, committees }: BlogPageProps) => {
                 : blog.date ?? '';
 
             // Get coverImageUrl from backend DTO (camelCase after JSON serialization)
-            // Backend returns CoverImageUrl with leading / (e.g., "/uploads/blogs/5/cover/xyz.jpg")
             const coverRaw = (blog as any).coverImageUrl as string | undefined;
-            const image =
-                coverRaw && coverRaw.startsWith('http')
-                    ? coverRaw
-                    : coverRaw
-                    ? `${API_URL}${coverRaw}`
-                    : 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+            let image: string;
+            if (!coverRaw) {
+                image = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80';
+            } else if (coverRaw.startsWith('http')) {
+                // Already a full URL
+                image = coverRaw;
+            } else if (coverRaw.startsWith('/http')) {
+                // Remove leading slash from full URL (e.g., "/https://...")
+                image = coverRaw.substring(1);
+            } else {
+                // Relative path, prepend API_URL
+                image = `${API_URL}${coverRaw}`;
+            }
 
             return {
                 ...blog,

@@ -1,5 +1,5 @@
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5287";
+  process.env.NEXT_PUBLIC_API_URL || "https://ieee-web-site-backend.onrender.com";
 
 if (!API_URL) {
   // eslint-disable-next-line no-console

@@ -35,12 +35,19 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   ) as { id: number; name: string } | undefined;
 
   const imageRaw: string | undefined = blogDto.coverImageUrl || undefined;
-  const image =
-    imageRaw && imageRaw.startsWith("http")
-      ? imageRaw
-      : imageRaw
-      ? `${API_URL}${imageRaw}`
-      : "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80";
+  let image: string;
+  if (!imageRaw) {
+    image = "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80";
+  } else if (imageRaw.startsWith("http")) {
+    // Already a full URL
+    image = imageRaw;
+  } else if (imageRaw.startsWith("/http")) {
+    // Remove leading slash from full URL (e.g., "/https://...")
+    image = imageRaw.substring(1);
+  } else {
+    // Relative path, prepend API_URL
+    image = `${API_URL}${imageRaw}`;
+  }
 
   const createdAt = blogDto.createdAt ? new Date(blogDto.createdAt) : null;
   const date = createdAt

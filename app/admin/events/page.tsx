@@ -84,12 +84,19 @@ export default function AdminEvents() {
             const data = await adminFetchEvents();
             const mapped: AdminEventRow[] = data.map((e: any) => {
                 const imageRaw: string | undefined = e.coverImageUrl || undefined;
-                const image =
-                    imageRaw && imageRaw.startsWith('http')
-                        ? imageRaw
-                        : imageRaw
-                            ? `${API_URL}${imageRaw}`
-                            : undefined;
+                let image: string | undefined;
+                if (!imageRaw) {
+                    image = undefined;
+                } else if (imageRaw.startsWith('http')) {
+                    // Already a full URL
+                    image = imageRaw;
+                } else if (imageRaw.startsWith('/http')) {
+                    // Remove leading slash from full URL (e.g., "/https://...")
+                    image = imageRaw.substring(1);
+                } else {
+                    // Relative path, prepend API_URL
+                    image = `${API_URL}${imageRaw}`;
+                }
 
                 const committee = Array.isArray(e.committees) && e.committees.length > 0
                     ? e.committees[0]
